@@ -1,0 +1,46 @@
+{
+    "name": "antenna/inline-translations",
+    "description": "Inline translation package for laravel with plugins for blade & vue",
+    "keywords": [
+        "translations",
+        "laravel",
+        "vue"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Antenna",
+            "email": "info@weareantenna.be"
+        }
+    ],
+    "require": {
+        "php" : "^7.4",
+        "illuminate/support": "^7.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5",
+        "phpunit/phpunit": "^9.1",
+        "doctrine/coding-standard": "^7.0",
+        "phpstan/phpstan": "^0.12.25",
+        "phpstan/phpstan-strict-rules": "^0.12.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Antenna\\InlineTranslations\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Antenna\\InlineTranslations\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Antenna\\InlineTranslations\\InlineTranslationsServiceProvider"
+            ]
+        }
+    },
+    "prefer-stable": true
+}
