@@ -2,6 +2,7 @@
 <ruleset name="Custom Standard">
     <file>src</file>
     <file>tests</file>
+    <exclude-pattern>*/src/config</exclude-pattern>
 
     <rule ref="Doctrine"/>
 </ruleset>

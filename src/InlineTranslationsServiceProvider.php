@@ -14,11 +14,13 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/config/inline-translations.php' => $this->app->configPath('inline-translations.php'),
         ]);
-        $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
     }
 
     public function register() : void
     {
+        $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
+        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+
         if ($this->app['request']->query($this->app['config']['inline-translations.url_query']) !== 'true') {
             return;
         }

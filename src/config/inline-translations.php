@@ -1,5 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
-return ['url_query' => 'translationMode'];
+return [
+    'routes' => [
+        'prefix'     => 'inline-translations',
+        'middleware' => null,
+    ],
+    'url_query' => 'translationMode'
+];
