@@ -5,33 +5,26 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations;
 
 use Antenna\InlineTranslations\Interceptors\LaravelTranslatorInterceptor;
-use Illuminate\Translation\TranslationServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
-final class InlineTranslationsServiceProvider extends TranslationServiceProvider
+final class InlineTranslationsServiceProvider extends ServiceProvider
 {
     public function boot() : void
     {
         $this->publishes([
-            __DIR__ . '/config/inline-translations.php' => config_path('inline-translations.php'),
+            __DIR__ . '/config/inline-translations.php' => $this->app->configPath('inline-translations.php'),
         ]);
         $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
     }
 
     public function register() : void
     {
-        // @phpstan-ignore-next-line
-        if ($this->app->request->query(config('inline-translations.url_query')) !== 'true') {
-            parent::register();
-
+        if ($this->app['request']->query($this->app['config']['inline-translations.url_query']) !== 'true') {
             return;
         }
 
-        $this->registerLoader();
-        $this->app->singleton('translator', static function ($app): LaravelTranslatorInterceptor {
-            $loader = $app['translation.loader'];
-            $locale = $app['config']['app.locale'];
-
-            $trans = new LaravelTranslatorInterceptor($loader, $locale);
+        $this->app->extend('translator', static function ($translator, $app) : LaravelTranslatorInterceptor {
+            $trans = new LaravelTranslatorInterceptor($translator->getLoader(), $app['config']['app.locale']);
             $trans->setFallback($app['config']['app.fallback_locale']);
 
             return $trans;
