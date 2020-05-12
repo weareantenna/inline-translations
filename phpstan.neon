@@ -1,8 +1,8 @@
 includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/nunomaduro/larastan/extension.neon
 
 parameters:
     paths:
         - src
         - tests
-    level: max
+    level: 5

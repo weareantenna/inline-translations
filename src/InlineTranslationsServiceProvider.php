@@ -17,14 +17,17 @@ final class InlineTranslationsServiceProvider extends TranslationServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
     }
 
-    public function register()
+    public function register() : void
     {
+        // @phpstan-ignore-next-line
         if ($this->app->request->query(config('inline-translations.url_query')) !== 'true') {
-            return parent::register();
+            parent::register();
+
+            return;
         }
 
         $this->registerLoader();
-        $this->app->singleton('translator', static function ($app) {
+        $this->app->singleton('translator', static function ($app): LaravelTranslatorInterceptor {
             $loader = $app['translation.loader'];
             $locale = $app['config']['app.locale'];
 
