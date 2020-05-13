@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations;
 
 use Antenna\InlineTranslations\Interceptors\LaravelTranslatorInterceptor;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -16,12 +17,24 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/config/inline-translations.php' => $this->app->configPath('inline-translations.php'),
         ]);
+
+        $this->publishes([
+            __DIR__.'/../resources/views' => base_path('resources/views/vendor/inlineTranslations'),
+        ], 'views');
     }
 
     public function register() : void
     {
         $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'inlineTranslations');
+
+        $translationModeActive = $this->app['request']->query($this->app['config']['inline-translations.url_query']) === 'true';
+        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) {
+            $view->with([
+                'enabled' => (int) $translationModeActive
+            ]);
+        });
 
         $languagePath = $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
         $this->app->bind(TranslationFetcher::class, static function () use ($languagePath) {
@@ -31,7 +44,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             return new TranslationFetcher($filesystem);
         });
 
-        if ($this->app['request']->query($this->app['config']['inline-translations.url_query']) !== 'true') {
+        if (!$translationModeActive) {
             return;
         }
 
