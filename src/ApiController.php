@@ -9,12 +9,14 @@ use Illuminate\Routing\Controller as BaseController;
 
 class ApiController extends BaseController
 {
-    public function fetch(string $language = null, TranslationFetcher $fetcher) {
+    public function fetch(?string $language = null, TranslationFetcher $fetcher)
+    {
         if ($language === null) {
             $translations = $fetcher->fetchAll();
         } else {
             $translations = $fetcher->fetchByLanguage($language);
         }
+
         return new JsonResponse($translations);
     }
 }

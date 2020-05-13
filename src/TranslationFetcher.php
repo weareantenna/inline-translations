@@ -1,8 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Antenna\InlineTranslations;
 
 use League\Flysystem\Filesystem;
+use function array_merge;
+use function is_array;
+use function str_replace;
 
 class TranslationFetcher
 {
@@ -12,31 +17,35 @@ class TranslationFetcher
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->basePath = $this->filesystem->getAdapter()->getPathPrefix();
+        $this->basePath   = $this->filesystem->getAdapter()->getPathPrefix();
     }
 
     /**
      * TODO: include vendor translations
      */
-    public function fetchAll(): array
+    public function fetchAll() : array
     {
         $rootFolderAndFiles = $this->filesystem->listContents();
 
         $translations = [];
         foreach ($rootFolderAndFiles as $rootFolderOrFile) {
-            if ($rootFolderOrFile['type'] === 'dir') {
-                $language = $rootFolderOrFile['basename'];
-
-                if ($language !== 'vendor') {
-                    $translations[$language] = $this->fetchByLanguage($language);
-                }
+            if ($rootFolderOrFile['type'] !== 'dir') {
+                continue;
             }
+
+            $language = $rootFolderOrFile['basename'];
+
+            if ($language === 'vendor') {
+                continue;
+            }
+
+            $translations[$language] = $this->fetchByLanguage($language);
         }
 
         return $translations;
     }
 
-    public function fetchByLanguage(string $language, string $basePath = '', string $prefix = ''): array
+    public function fetchByLanguage(string $language, string $basePath = '', string $prefix = '') : array
     {
         return array_merge(
             $this->parseLanguageFile($language),
@@ -44,13 +53,13 @@ class TranslationFetcher
         );
     }
 
-    private function parseLanguageFile(string $language, string $basePath = '', string $prefix = ''): array
+    private function parseLanguageFile(string $language, string $basePath = '', string $prefix = '') : array
     {
         $languageFiles = $this->filesystem->listContents($basePath . $language);
 
         $translations = [];
-        foreach($languageFiles as $languageFile) {
-            $translationContent = require_once($this->basePath . $languageFile['path']);
+        foreach ($languageFiles as $languageFile) {
+            $translationContent = require_once $this->basePath . $languageFile['path'];
 
             $translations = array_merge(
                 $translations,
@@ -64,7 +73,7 @@ class TranslationFetcher
         return $translations;
     }
 
-    private function getVendorTranslationsByLanguage(string $language): array
+    private function getVendorTranslationsByLanguage(string $language) : array
     {
         $vendorFolders = $this->filesystem->listContents('vendor');
 
@@ -73,14 +82,14 @@ class TranslationFetcher
             $vendorTranslations = $this->filesystem->listContents($vendorFolder['path']);
 
             foreach ($vendorTranslations as $vendorTranslation) {
-                if($vendorTranslation['basename'] !== $language) {
+                if ($vendorTranslation['basename'] !== $language) {
                     continue;
                 }
 
-                $package = str_replace('vendor/', '', $vendorTranslation['dirname']);
+                $package      = str_replace('vendor/', '', $vendorTranslation['dirname']);
                 $translations = array_merge(
                     $translations,
-                    $this->parseLanguageFile($language, $vendorTranslation['dirname'] .'/', $package . '::')
+                    $this->parseLanguageFile($language, $vendorTranslation['dirname'] . '/', $package . '::')
                 );
             }
         }
@@ -88,8 +97,9 @@ class TranslationFetcher
         return $translations;
     }
 
-    private function flattenTranslationKeys(array $translationArray, string $fileName, array $flattenedArray = []) {
-        foreach($translationArray as $key => $translation) {
+    private function flattenTranslationKeys(array $translationArray, string $fileName, array $flattenedArray = [])
+    {
+        foreach ($translationArray as $key => $translation) {
             if (is_array($translation)) {
                 $flattenedArray = array_merge(
                     $flattenedArray,

@@ -24,8 +24,8 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
 
         $languagePath = $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
-        $this->app->bind(TranslationFetcher::class, static function() use ($languagePath) {
-            $adapter = new Local($languagePath);
+        $this->app->bind(TranslationFetcher::class, static function () use ($languagePath) {
+            $adapter    = new Local($languagePath);
             $filesystem = new Filesystem($adapter);
 
             return new TranslationFetcher($filesystem);
