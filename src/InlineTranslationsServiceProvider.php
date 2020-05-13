@@ -21,6 +21,10 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views' => base_path('resources/views/vendor/inlineTranslations'),
         ], 'views');
+
+        $this->publishes([
+            __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations')
+        ], 'vue-assets');
     }
 
     public function register() : void
