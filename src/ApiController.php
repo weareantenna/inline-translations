@@ -15,7 +15,6 @@ class ApiController extends BaseController
         } else {
             $translations = $fetcher->fetchByLanguage($language);
         }
-
         return new JsonResponse($translations);
     }
 }
