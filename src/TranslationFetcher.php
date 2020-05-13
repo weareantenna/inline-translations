@@ -6,7 +6,9 @@ namespace Antenna\InlineTranslations;
 
 use League\Flysystem\Filesystem;
 use function array_merge;
+use function assert;
 use function is_array;
+use function is_string;
 use function str_replace;
 
 class TranslationFetcher
@@ -17,12 +19,11 @@ class TranslationFetcher
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        $this->basePath   = $this->filesystem->getAdapter()->getPathPrefix();
+        //@phpstan-ignore-next-line
+        $this->basePath = $this->filesystem->getAdapter()->getPathPrefix();
     }
 
-    /**
-     * TODO: include vendor translations
-     */
+    /** @return array<string, array<string>> */
     public function fetchAll() : array
     {
         $rootFolderAndFiles = $this->filesystem->listContents();
@@ -39,12 +40,13 @@ class TranslationFetcher
                 continue;
             }
 
-            $translations[$language] = $this->fetchByLanguage($language);
+            $translations[(string) $language] = $this->fetchByLanguage($language);
         }
 
         return $translations;
     }
 
+    /** @return string[] */
     public function fetchByLanguage(string $language, string $basePath = '', string $prefix = '') : array
     {
         return array_merge(
@@ -53,6 +55,7 @@ class TranslationFetcher
         );
     }
 
+    /** @return string[] */
     private function parseLanguageFile(string $language, string $basePath = '', string $prefix = '') : array
     {
         $languageFiles = $this->filesystem->listContents($basePath . $language);
@@ -73,6 +76,7 @@ class TranslationFetcher
         return $translations;
     }
 
+    /** @return string[] */
     private function getVendorTranslationsByLanguage(string $language) : array
     {
         $vendorFolders = $this->filesystem->listContents('vendor');
@@ -86,10 +90,11 @@ class TranslationFetcher
                     continue;
                 }
 
-                $package      = str_replace('vendor/', '', $vendorTranslation['dirname']);
+                $package = str_replace('vendor/', '', $vendorTranslation['dirname']);
+                assert(is_string($package));
                 $translations = array_merge(
                     $translations,
-                    $this->parseLanguageFile($language, $vendorTranslation['dirname'] . '/', $package . '::')
+                    $this->parseLanguageFile($language, $vendorTranslation['dirname'] . '/' . $package . '::')
                 );
             }
         }
@@ -97,7 +102,13 @@ class TranslationFetcher
         return $translations;
     }
 
-    private function flattenTranslationKeys(array $translationArray, string $fileName, array $flattenedArray = [])
+    /**
+     * @param array<string|array> $translationArray
+     * @param string[]            $flattenedArray
+     *
+     * @return string[]
+     */
+    private function flattenTranslationKeys(array $translationArray, string $fileName, array $flattenedArray = []) : array
     {
         foreach ($translationArray as $key => $translation) {
             if (is_array($translation)) {

@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Antenna\InlineTranslations;
+namespace Antenna\InlineTranslations\Controllers;
 
+use Antenna\InlineTranslations\TranslationFetcher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 
 class ApiController extends BaseController
 {
-    public function fetch(?string $language = null, TranslationFetcher $fetcher)
+    public function fetch(?string $language = null, TranslationFetcher $fetcher) : JsonResponse
     {
         if ($language === null) {
             $translations = $fetcher->fetchAll();

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations;
 
 use Antenna\InlineTranslations\Interceptors\LaravelTranslatorInterceptor;
-use Antenna\InlineTranslations\Middleware\InjectTranslator;
+use Antenna\InlineTranslations\Middleware\AssetInjectionMiddleware;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use function base_path;
+use function resource_path;
 
 final class InlineTranslationsServiceProvider extends ServiceProvider
 {
@@ -21,12 +23,12 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/inlineTranslations'),
+            __DIR__ . '/../resources/views' => base_path('resources/views/vendor/inlineTranslations'),
         ], 'views');
-        $this->registerMiddleware(InjectTranslator::class);
+        $this->registerMiddleware(AssetInjectionMiddleware::class);
 
         $this->publishes([
-            __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations')
+            __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
         ], 'vue-assets');
     }
 
@@ -34,12 +36,12 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'inlineTranslations');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'inlineTranslations');
 
         $translationModeActive = $this->app['request']->query($this->app['config']['inline-translations.url_query']) === 'true';
-        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) {
+        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) : void {
             $view->with([
-                'enabled' => (int) $translationModeActive
+                'enabled' => (int) $translationModeActive,
             ]);
         });
 
@@ -51,7 +53,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             return new TranslationFetcher($filesystem);
         });
 
-        if (!$translationModeActive) {
+        if (! $translationModeActive) {
             return;
         }
 
@@ -63,7 +65,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         });
     }
 
-    protected function registerMiddleware(string $middleware): void
+    protected function registerMiddleware(string $middleware) : void
     {
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
