@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations;
 
 use Antenna\InlineTranslations\Interceptors\LaravelTranslatorInterceptor;
+use Antenna\InlineTranslations\Middleware\InjectTranslator;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Adapter\Local;
@@ -21,6 +23,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views' => base_path('resources/views/vendor/inlineTranslations'),
         ], 'views');
+        $this->registerMiddleware(InjectTranslator::class);
     }
 
     public function register() : void
@@ -54,5 +57,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
             return $trans;
         });
+    }
+
+    protected function registerMiddleware(string $middleware): void
+    {
+        $kernel = $this->app[Kernel::class];
+        $kernel->pushMiddleware($middleware);
     }
 }
