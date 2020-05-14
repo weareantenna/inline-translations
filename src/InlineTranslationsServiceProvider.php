@@ -19,7 +19,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
     public function boot() : void
     {
         $this->publishes([
-            __DIR__ . '/config/inline-translations.php' => $this->app->configPath('inline-translations.php'),
+            __DIR__ . '/../config/inline-translations.php' => $this->app->configPath('inline-translations.php'),
         ]);
 
         $this->publishes([
@@ -34,7 +34,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
     public function register() : void
     {
-        $this->mergeConfigFrom(__DIR__ . '/config/inline-translations.php', 'inline-translations');
+        $this->mergeConfigFrom(__DIR__ . '/../config/inline-translations.php', 'inline-translations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'inlineTranslations');
 
