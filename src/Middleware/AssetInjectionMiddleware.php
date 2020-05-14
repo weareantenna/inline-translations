@@ -63,8 +63,14 @@ class AssetInjectionMiddleware
             return $content;
         }
 
-        $jsRoute  = preg_replace('/https?:/', '', route('inline-translations.assets.js'));
-        $js = "<div id='antenna-inline-translator'></div><script type='text/javascript' src='{$jsRoute}'></script>\n";
+        $dev = true;
+        if($dev) {
+            $jsRoute = 'http://localhost:8080/translations.js'; //TODO: make this variable
+        } else {
+            $jsRoute  = preg_replace('/https?:/', '', route('inline-translations.assets.js'));
+        }
+
+        $js = "<div id='antenna-inline-translator'><div id='antenna-inline-translator-app'></div></div><script type='text/javascript' src='{$jsRoute}'></script>\n";
         return substr($content, 0, $bodyPos) . $js . substr($content, $bodyPos);
     }
 }
