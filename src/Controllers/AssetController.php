@@ -20,7 +20,7 @@ class AssetController extends BaseController
     /** @return string[] */
     private function getJavascript() : array
     {
-        return [];
+        return ['js/replacer.js'];
     }
 
     public function js() : Response
@@ -58,7 +58,7 @@ class AssetController extends BaseController
     {
         $assetString = '';
         foreach ($assets as $asset) {
-            $assetString .= file_get_contents(__DIR__ . '/../resources/' . $asset) . "\n";
+            $assetString .= file_get_contents(__DIR__ . '/../../resources/' . $asset) . "\n";
         }
 
         return $assetString;

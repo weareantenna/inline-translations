@@ -34,23 +34,37 @@ class AssetInjectionMiddleware
             return $response;
         }
 
-        $pos = strripos($content, '</head>');
-        if (! is_int($pos)) {
-            return $response;
-        }
-
-        $cssRoute = preg_replace('/https?:/', '', route('inline-translations.assets.css'));
-        $jsRoute  = preg_replace('/https?:/', '', route('inline-translations.assets.js'));
-
-        $html  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>\n";
-        $html .= "<script type='text/javascript' src='{$jsRoute}'></script>\n";
-
-        $content = substr($content, 0, $pos) . $html . substr($content, $pos);
+        $content = $this->addCssBeforeClosingHeadTag($content);
+        $content = $this->addJsBeforeClosingBodyTag($content);
 
         // Update the new content and reset the content length
         $response->setContent($content);
         $response->headers->remove('Content-Length');
 
         return $response;
+    }
+
+    private function addCssBeforeClosingHeadTag(string $content)
+    {
+        $headPos = strripos($content, '</head>');
+        if (! is_int($headPos)) {
+            return $content;
+        }
+
+        $cssRoute = preg_replace('/https?:/', '', route('inline-translations.assets.css'));
+        $css  = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>\n";
+        return substr($content, 0, $headPos) . $css . substr($content, $headPos);
+    }
+
+    private function addJsBeforeClosingBodyTag(string $content)
+    {
+        $bodyPos = strripos($content, '</body>');
+        if (! is_int($bodyPos)) {
+            return $content;
+        }
+
+        $jsRoute  = preg_replace('/https?:/', '', route('inline-translations.assets.js'));
+        $js = "<div id='antenna-inline-translator'></div><script type='text/javascript' src='{$jsRoute}'></script>\n";
+        return substr($content, 0, $bodyPos) . $js . substr($content, $bodyPos);
     }
 }
