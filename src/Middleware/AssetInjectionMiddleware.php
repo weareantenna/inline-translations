@@ -7,6 +7,7 @@ namespace Antenna\InlineTranslations\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response as BaseResponse;
 use function is_int;
 use function is_string;
 use function preg_replace;
@@ -16,11 +17,14 @@ use function substr;
 
 class AssetInjectionMiddleware
 {
-    public function handle(Request $request, Closure $next) : Response
+    public function handle(Request $request, Closure $next) : BaseResponse
     {
         $response = $next($request);
+        if ($response instanceof Response) {
+            $response = $this->injectTranslator($response);
+        }
 
-        return $this->injectTranslator($response);
+        return $response;
     }
 
     private function injectTranslator(Response $response) : Response

@@ -19,8 +19,7 @@ class TranslationFetcher
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-        //@phpstan-ignore-next-line
-        $this->basePath = $this->filesystem->getAdapter()->getPathPrefix();
+        $this->basePath   = $this->filesystem->getAdapter()->getPathPrefix(); //@phpstan-ignore-line
     }
 
     /** @return array<string, array<string>> */

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations;
 
-use Antenna\InlineTranslations\Interceptors\LaravelTranslatorInterceptor;
 use Antenna\InlineTranslations\Middleware\AssetInjectionMiddleware;
+use Antenna\InlineTranslations\Plugins\Laravel\LaravelTranslatorInterceptor;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
@@ -45,12 +45,12 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             ]);
         });
 
-        $languagePath = $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
-        $this->app->bind(TranslationFetcher::class, static function () use ($languagePath) {
-            $adapter    = new Local($languagePath);
-            $filesystem = new Filesystem($adapter);
-
+        $filesystem = $this->getFilesystem();
+        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem) : TranslationFetcher {
             return new TranslationFetcher($filesystem);
+        });
+        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem) : TranslationUpdater {
+            return new TranslationUpdater($filesystem);
         });
 
         if (! $translationModeActive) {
@@ -63,6 +63,14 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
             return $trans;
         });
+    }
+
+    protected function getFilesystem() : Filesystem
+    {
+        $languagePath = $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
+        $adapter      = new Local($languagePath);
+
+        return new Filesystem($adapter);
     }
 
     protected function registerMiddleware(string $middleware) : void
