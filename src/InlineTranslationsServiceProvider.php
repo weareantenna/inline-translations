@@ -25,11 +25,14 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../resources/views' => base_path('resources/views/vendor/inlineTranslations'),
         ], 'views');
-        $this->registerMiddleware(AssetInjectionMiddleware::class);
 
         $this->publishes([
             __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
         ], 'vue-assets');
+
+        if ($this->isTranslationModeActive()) {
+            $this->registerMiddleware(AssetInjectionMiddleware::class);
+        }
     }
 
     public function register() : void
@@ -38,7 +41,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'inlineTranslations');
 
-        $translationModeActive = $this->app['request']->query($this->app['config']['inline-translations.url_query']) === 'true';
+        $translationModeActive = $this->isTranslationModeActive();
         $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) : void {
             $view->with([
                 'enabled' => (int) $translationModeActive,
@@ -63,6 +66,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
             return $trans;
         });
+    }
+
+    private function isTranslationModeActive(): bool
+    {
+        return $this->app['request']->query($this->app['config']['inline-translations.url_query']) === 'true';
     }
 
     protected function getFilesystem() : Filesystem
