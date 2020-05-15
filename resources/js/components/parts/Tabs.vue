@@ -29,10 +29,11 @@
     export default {
         name: "Tabs",
         props: {
-            activeTab: { default: '', type: String }
+            activeTabName: { default: null, type: String }
         },
         data: () => ({
             tabs: [],
+            activeTab: null
         }),
         computed: {
             visibleTabs() {
@@ -42,15 +43,17 @@
         created() {
             this.tabs = this.$children;
         },
-        mounted() {
-            if (this.activeTab) {
-                this.setTabActive(this.tabs.find((tab) => (tab.id === this.activeTab)));
-            } else {
-                this.setTabActive(this.tabs[0]);
+        watch: {
+            tabs: function(tabs) {
+                this.setTabActive(this.tabs.find((tab) => (tab.id === this.activeTabName)));
             }
         },
         methods: {
             setTabActive(tab) {
+                if (!tab) {
+                    return;
+                }
+
                 this.tabs.forEach((tab) => { tab.isActive = false; });
 
                 tab.isActive = true;

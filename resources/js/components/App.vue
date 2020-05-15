@@ -10,10 +10,10 @@
                 {{ activeTranslation.value }}
             </div>
             <div>
-                <tabs v-if="activeTranslationValues" :activeTab="activeLanguage">
+                <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
                     <tab v-for="(value, language) in activeTranslationValues" :name="language" :id="language">
-                        <textarea>{{ value }}</textarea>
-                        <button>submit</button>
+                        <textarea v-model="activeTranslationValues[language]"></textarea>
+                        <button @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">submit</button>
                     </tab>
                 </tabs>
             </div>
@@ -32,7 +32,9 @@
         data: () => ({
             pageTranslations: {},
             activeTranslation: {key: null, value: null },
-            allTranslations: {}
+            allTranslations: {},
+            translationValue: null,
+            activeTranslationValues: []
         }),
         mounted() {
             this.pageTranslations = replacer(this.pageTranslations);
@@ -48,6 +50,7 @@
             document.addEventListener('click', (e) => {
                 for (let target = e.target; target && target != this && target !== document; target = target.parentNode) {
                     if (target.matches('.trans-ui-element i')) {
+                        e.preventDefault();
                         this.activeTranslation = this.pageTranslations.find(
                             trans => trans.key === target.parentElement.getAttribute('data-translation-key')
                         );
@@ -58,21 +61,17 @@
             }, false);
         },
         computed: {
-          activeTranslationValues() {
-              return this.allTranslations[this.activeTranslation.key];
-          },
           activeLanguage() {
-            return Object.keys(this.activeTranslationValues)
-                .find(language => this.activeTranslationValues[language] === this.activeTranslation.value);
+            return document.documentElement.lang; //TODO: check if we can do this?
           }
         },
         watch: {
-            activeTranslation: (activeTranslation) => {
+            activeTranslation: function (activeTranslation) {
                 let active = document.querySelectorAll('var.trans-ui-element--active').forEach(element => {
                     element.classList.remove('trans-ui-element--active');
                 });
 
-
+                this.activeTranslationValues = this.allTranslations[activeTranslation.key];
 
                 document.querySelectorAll(`var[data-translation-key="${activeTranslation.key}"]`).forEach(
                     location => {
@@ -85,6 +84,15 @@
             scrollKeyIntoView(key) {
                 document.querySelector(`var[data-translation-key="${key}"]`).scrollIntoView();
                 window.scrollBy(0, -20);
+            },
+            submitTranslation(key, value, language) {
+                console.log([key, value, language]);
+
+                if (language = this.activeLanguage) {
+                    document.querySelectorAll(`var[data-translation-key="${key}"]`).forEach(element => {
+                        element.innerHTML = value + '<i></i>';
+                    });
+                }
             }
         }
     }
