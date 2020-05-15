@@ -1,27 +1,24 @@
 import findAndReplaceDOMText from 'findandreplacedomtext';
 
 export default function() {
-    let translationStrings = {};
+    let translationStrings = [];
     const matches = document.body.innerHTML.matchAll(/[^"](\~\~\#([a-zA-Z0-9\.\-\_]*)\#\~\#(.*?)\#\~\~)[^"]/g);
     for (let match of matches) {
-        translationStrings[match[2]] = match[3];
+        translationStrings.push({
+            key: match[2],
+            value: match[3]
+        });
 
         findAndReplaceDOMText(document, {
             find: match[1],
             replace: function(portion) {
-                let element = document.createElement('trans-ui');
+                let element = document.createElement('var');
                 element.setAttribute('data-translation-key', match[2]);
+                element.style.fontStyle = 'inherit';
                 element.textContent = match[3];
                 return element;
             }
         });
-
-        /*
-        document.body.innerHTML = document.body.innerHTML.replace(
-            match[1],
-            '<span data-translation-key="' + match[2] + '">' + match[3] + '</span>'
-        );
-         */
     }
 
     return translationStrings;

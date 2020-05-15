@@ -2,14 +2,12 @@
     <div class="translator-ui">
         <div class="trans-ui-row">
             <div>
-                <select name="key">
-                    <option v-for="(key, translation) in translations"> {{ key }}</option>
+                <select name="key" class="select-list" :size="translations.length" v-model="activeTranslation">
+                    <option v-for="translation in translations" :value="translation">{{ translation.key }}</option>
                 </select>
             </div>
             <div>
-                <div v-for="translation in translations">
-                    {{ translation }}
-                </div>
+                {{ activeTranslation.value }}
             </div>
             <div>
             </div>
@@ -22,11 +20,11 @@
     export default {
         name: "App",
         data: () => ({
-            translations: {}
+            translations: {},
+            activeTranslation: {key: null, value: null }
         }),
         mounted() {
             this.translations = replacer(this.translations);
-            console.log(this.translations);
         }
     }
 </script>
