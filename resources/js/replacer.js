@@ -16,6 +16,8 @@ export default function() {
                 element.setAttribute('data-translation-key', match[2]);
                 element.classList.add('trans-ui-element');
                 element.textContent = match[3];
+
+                element.appendChild(document.createElement('i'));
                 return element;
             }
         });
