@@ -34,7 +34,7 @@ class AssetInjectionMiddleware
             return $response;
         }
 
-        $content = $this->addCssBeforeClosingHeadTag($content);
+        //$content = $this->addCssBeforeClosingHeadTag($content);
         $content = $this->addJsBeforeClosingBodyTag($content);
 
         // Update the new content and reset the content length
