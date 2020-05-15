@@ -1,6 +1,9 @@
+$active: red;
+$white: #FFF;
+$light-gray: #e6ebf0;
+
 #antenna-inline-translator {
-  $white: #FFF;
-  $light-gray: #e6ebf0;
+
   position: fixed;
   bottom: 0;
   left: 0;
@@ -32,4 +35,18 @@
 
 body {
   padding-bottom: 300px;
+}
+
+.trans-ui-element {
+  font-style: inherit !important;
+  position: relative;
+
+  &--active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background-color: $active;
+  }
 }

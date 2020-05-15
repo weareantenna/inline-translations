@@ -25,6 +25,19 @@
         }),
         mounted() {
             this.translations = replacer(this.translations);
+        },
+        watch: {
+            activeTranslation: (activeTranslation) => {
+                let active = document.querySelectorAll('var.trans-ui-element--active');
+                for (let i = 0; i < active.length; i++) {
+                    active[i].classList.remove('trans-ui-element--active');
+                }
+
+                let locations = document.querySelectorAll(`var[data-translation-key="${activeTranslation.key}"]`);
+                for (let i = 0; i < locations.length; i++) {
+                    locations[i].classList.add('trans-ui-element--active');
+                }
+            }
         }
     }
 </script>

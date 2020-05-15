@@ -14,7 +14,7 @@ export default function() {
             replace: function(portion) {
                 let element = document.createElement('var');
                 element.setAttribute('data-translation-key', match[2]);
-                element.style.fontStyle = 'inherit';
+                element.classList.add('trans-ui-element');
                 element.textContent = match[3];
                 return element;
             }
