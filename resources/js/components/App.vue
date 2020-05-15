@@ -10,8 +10,8 @@
                 {{ activeTranslation.value }}
             </div>
             <div>
-                <tabs v-if="activeTranslationValues">
-                    <tab v-for="(value, language) in activeTranslationValues" :name="language">
+                <tabs v-if="activeTranslationValues" :activeTab="activeLanguage">
+                    <tab v-for="(value, language) in activeTranslationValues" :name="language" :id="language">
                         <textarea>{{ value }}</textarea>
                         <button>submit</button>
                     </tab>
@@ -60,6 +60,10 @@
         computed: {
           activeTranslationValues() {
               return this.allTranslations[this.activeTranslation.key];
+          },
+          activeLanguage() {
+            return Object.keys(this.activeTranslationValues)
+                .find(language => this.activeTranslationValues[language] === this.activeTranslation.value);
           }
         },
         watch: {

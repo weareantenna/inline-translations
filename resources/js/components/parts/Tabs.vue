@@ -44,9 +44,9 @@
         },
         mounted() {
             if (this.activeTab) {
-                this.tabs.find((tab) => (tab.id === this.activeTab)).isActive = true;
+                this.setTabActive(this.tabs.find((tab) => (tab.id === this.activeTab)));
             } else {
-                this.tabs[0].isActive = true;
+                this.setTabActive(this.tabs[0]);
             }
         },
         methods: {
