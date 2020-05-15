@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "main": "resources/js/index.js",
   "scripts": {
-    "dev": "webpack-dev-server --mode development --host 0.0.0.0 --disable-host-check",
-    "prod": "webpack --mode production"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --mode development --host 0.0.0.0 --disable-host-check",
+    "prod": "cross-env NODE_ENV=production webpack --mode production"
   },
   "dependencies": {
     "vue": "^2.6.11"
@@ -15,7 +15,9 @@
     "@babel/preset-env": "^7.9.6",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
+    "findandreplacedomtext": "^0.4.6",
     "node-sass": "^4.14.1",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.1",

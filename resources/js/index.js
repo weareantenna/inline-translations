@@ -1,9 +1,8 @@
-import Vue from 'vue'
-import AppComponent from './components/App.vue'
+import Vue from 'vue';
+import App from './components/App.vue';
 
 require('../sass/app.scss');
-require('./replacer.js');
 
 new Vue({
-    render: h => h(AppComponent)
+    render: h => h(App)
 }).$mount('#antenna-inline-translator-app')

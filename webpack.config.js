@@ -11,9 +11,14 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
                 test: /\.s[ac]ss$/i,
                 use: [
                     'style-loader',
+                    'vue-style-loader',
                     {loader: 'css-loader', options: { importLoaders: 1 }},
                     'sass-loader'
                 ]
@@ -32,16 +37,12 @@ module.exports = {
                         ]
                     }
                 }
-            },
-            {
-                test: /\.vue$/,
-                loader: 'vue-loader'
             }
         ]
     },
     resolve: {
         alias: {
-            'vue$': 'vue/dist/vue.esm.js'
+            'vue$': process.env.NODE_ENV === 'development' ? 'vue/dist/vue.runtime.js' : 'vue/dist/vue.runtime.min.js',
         },
         extensions: ['*', '.js', '.vue', '.json']
     },
