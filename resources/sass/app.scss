@@ -1,8 +1,10 @@
 $active: red;
 $white: #FFF;
 $light-gray: #e6ebf0;
+$gray: #a8a9af;
 
 #antenna-inline-translator {
+  @import "tabs";
 
   position: fixed;
   bottom: 0;

@@ -15,7 +15,7 @@ class ApiController extends BaseController
     public function fetch(?string $language = null, TranslationFetcher $fetcher) : JsonResponse
     {
         if ($language === null) {
-            $translations = $fetcher->fetchAll();
+            $translations = $fetcher->fetchAllGroupedByKeys();
         } else {
             $translations = $fetcher->fetchByLanguage($language);
         }

@@ -45,6 +45,25 @@ class TranslationFetcher
         return $translations;
     }
 
+    /** TODO: we should also return not translated values or handle this in the frontend so that new translations can be done */
+    public function fetchAllGroupedByKeys(): array
+    {
+        $translationsByLanguage = $this->fetchAll();
+
+        $result = [];
+        foreach ($translationsByLanguage as $language => $translations) {
+            foreach ($translations as $key => $value) {
+                if (!array_key_exists($key, $result)) {
+                    $result[$key] = [];
+                }
+
+                $result[$key][$language] = $value;
+            }
+        }
+
+        return $result;
+    }
+
     /** @return string[] */
     public function fetchByLanguage(string $language, string $basePath = '', string $prefix = '') : array
     {

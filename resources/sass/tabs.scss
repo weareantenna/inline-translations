@@ -1,0 +1,39 @@
+.translation-ui-tabs-wrapper {
+  margin: 2rem 0.5rem;
+}
+
+.translation-ui-tabs-nav {
+  & > li {
+    display: inline-block;
+
+    & > a {
+      padding: 0.5rem;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+
+      &.active {
+        border: 1px solid $gray;
+        border-bottom: $white;
+        background: $white;
+      }
+    }
+  }
+}
+
+.translation-ui-tab-content {
+  .tab-pane {
+    margin-top: -1px;
+    display: none;
+    border: 1px solid $gray;
+    padding: 0.5rem;
+
+    textarea {
+      width: 100%;
+    }
+  }
+
+  .tab-pane.active {
+    display: block;
+  }
+}
