@@ -7,6 +7,7 @@ namespace Antenna\InlineTranslations\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response as BaseResponse;
 use function file_get_contents;
 use function is_int;
@@ -67,8 +68,10 @@ class AssetInjectionMiddleware
             return $content;
         }
 
+        $config = config('inline-translations.routes');
+        $config['current_language'] = App::getLocale();
         $jsRoute = $this->getJsRouteFromManifest();
-        $js      = "<div id='antenna-inline-translator' data-config='" . json_encode(config('inline-translations.routes')) . "'><div id='antenna-inline-translator-app'></div></div><script type='text/javascript' src='{$jsRoute}'></script>\n";
+        $js      = "<div id='antenna-inline-translator' data-config='" . json_encode($config) . "'><div id='antenna-inline-translator-app'></div></div><script type='text/javascript' src='{$jsRoute}'></script>\n";
 
         return substr($content, 0, $bodyPos) . $js . substr($content, $bodyPos);
     }

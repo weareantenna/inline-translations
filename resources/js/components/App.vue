@@ -41,11 +41,9 @@
             this.pageTranslations = replacer(this.pageTranslations);
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
 
-            fetch('/' + this.config.prefix + '/all').then(response => {
-                response.json().then(json => {
-                    this.allTranslations = json;
-                });
-            });
+            fetch('/' + this.config.prefix + '/all')
+                    .then(response => response.json())
+                    .then(json => { this.allTranslations = json; });
 
             // event needs to be on document for this to work
             document.addEventListener('click', (e) => {
@@ -63,7 +61,7 @@
         },
         computed: {
           activeLanguage() {
-            return document.documentElement.lang; //TODO: check if we can do this?
+            return this.config.current_language;
           }
         },
         watch: {
@@ -87,13 +85,25 @@
                 window.scrollBy(0, -20);
             },
             submitTranslation(key, value, language) {
-                console.log([key, value, language]);
-
                 if (language = this.activeLanguage) {
                     document.querySelectorAll(`var[data-translation-key="${key}"]`).forEach(element => {
                         element.innerHTML = value + '<i></i>';
                     });
                 }
+
+                let postData = new FormData();
+                postData.append('key', key);
+                postData.append('value', value);
+                postData.append('language', language);
+                fetch('/' + this.config.prefix + '/upsert', {
+                    method: 'POST',
+                    body: postData
+                }).then(response => response.json())
+                .then(json => {
+                    if (json.result) {
+                        window.alert('success');
+                    }
+                });
             }
         }
     }
