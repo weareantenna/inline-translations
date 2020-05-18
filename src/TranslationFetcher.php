@@ -83,7 +83,7 @@ class TranslationFetcher
             if ($languageFile['type'] === 'dir') {
                 continue;
             }
-            
+
             $translationContent = require_once $this->basePath . $languageFile['path'];
 
             $translations = array_merge(
