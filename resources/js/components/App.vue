@@ -30,6 +30,7 @@
         name: "App",
         components: { Tabs, Tab },
         data: () => ({
+            config: {},
             pageTranslations: {},
             activeTranslation: {key: null, value: null },
             allTranslations: {},
@@ -38,9 +39,9 @@
         }),
         mounted() {
             this.pageTranslations = replacer(this.pageTranslations);
+            this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
 
-            //TODO: this should be variable depending on config
-            fetch('/inline-translations/all').then(response => {
+            fetch('/' + this.config.prefix + '/all').then(response => {
                 response.json().then(json => {
                     this.allTranslations = json;
                 });
