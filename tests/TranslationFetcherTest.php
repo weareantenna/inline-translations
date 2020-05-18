@@ -20,8 +20,7 @@ class TranslationFetcherTest extends TestCase
         $this->fetcher = new TranslationFetcher($filesystem);
     }
 
-    /** @test */
-    public function it_can_read_translation_keys_per_language(): void
+    public function testReadAllTranslationsPerLanguage(): void
     {
         $translations = $this->fetcher->fetchAll();
 
@@ -29,8 +28,7 @@ class TranslationFetcherTest extends TestCase
         $this->assertEquals('Maandag', $translations['nl']['app.days.monday']);
     }
 
-    /** @test */
-    public function it_can_read_nested_keys_per_language(): void
+    public function testReadNestedKeysPerLanguage(): void
     {
         $translations = $this->fetcher->fetchAll();
 
@@ -38,31 +36,27 @@ class TranslationFetcherTest extends TestCase
         $this->assertEquals('Kerstmis', $translations['nl']['app.holidays.december.christmas']);
     }
 
-    /** @test */
-    public function it_can_read_vendor_keys(): void
+    public function testReadVendorKeys(): void
     {
         $translations = $this->fetcher->fetchAll();
 
         $this->assertEquals('vendor string', $translations['en']['PackageName::vendor.key']);
     }
 
-    /** @test */
-    public function it_can_fetch_single_language(): void
+    public function testFetchSingleLanguage(): void
     {
         $translations = $this->fetcher->fetchByLanguage('en');
 
         $this->assertEquals('Monday', $translations['app.days.monday']);
     }
 
-    /** @test */
-    public function it_can_fetch_single_unexisting_language(): void
+    public function testFetchUnexistingLanguage(): void
     {
         $translations = $this->fetcher->fetchByLanguage('fr');
         $this->assertEmpty($translations);
     }
 
-    /** @test */
-    public function it_can_fetch_translations_grouped_by_key(): void
+    public function testFetchedAllTranslationsGroupedByKey(): void
     {
         $translations = $this->fetcher->fetchAllGroupedByKeys();
 
