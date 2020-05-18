@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations;
 
 use League\Flysystem\Filesystem;
+use function array_key_exists;
 use function array_merge;
 use function assert;
 use function is_array;
@@ -46,14 +47,16 @@ class TranslationFetcher
     }
 
     /** TODO: we should also return not translated values or handle this in the frontend so that new translations can be done */
-    public function fetchAllGroupedByKeys(): array
+
+    /** @return array<int|string,array<string, string>> */
+    public function fetchAllGroupedByKeys() : array
     {
         $translationsByLanguage = $this->fetchAll();
 
         $result = [];
         foreach ($translationsByLanguage as $language => $translations) {
             foreach ($translations as $key => $value) {
-                if (!array_key_exists($key, $result)) {
+                if (! array_key_exists($key, $result)) {
                     $result[$key] = [];
                 }
 

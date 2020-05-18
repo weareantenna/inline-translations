@@ -30,9 +30,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
         ], 'vue-assets');
 
-        if ($this->isTranslationModeActive()) {
-            $this->registerMiddleware(AssetInjectionMiddleware::class);
+        if (! $this->isTranslationModeActive()) {
+            return;
         }
+
+        $this->registerMiddleware(AssetInjectionMiddleware::class);
     }
 
     public function register() : void
@@ -68,7 +70,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         });
     }
 
-    private function isTranslationModeActive(): bool
+    private function isTranslationModeActive() : bool
     {
         return $this->app['request']->query($this->app['config']['inline-translations.url_query']) === 'true';
     }

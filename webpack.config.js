@@ -1,12 +1,17 @@
 
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-    entry: './resources/js/index.js',
+    entry: {
+        'main': './resources/js/index.js'
+    },
     output: {
-        filename: 'translations.js',
-        path: path.resolve(__dirname, './resources/dist'),
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, './resources/dist/'),
+        publicPath: process.env.NODE_ENV === 'development' ? '//localhost:8080/' : '/'
     },
     module: {
         rules: [
@@ -47,6 +52,10 @@ module.exports = {
         extensions: ['*', '.js', '.vue', '.json']
     },
     plugins: [
-        new VueLoaderPlugin()
+        new CleanWebpackPlugin(),
+        new VueLoaderPlugin(),
+        new ManifestPlugin({
+            writeToFileEmit: true
+        })
     ]
 }

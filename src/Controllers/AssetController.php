@@ -14,13 +14,13 @@ class AssetController extends BaseController
     /** @return string[] */
     private function getStylesheets() : array
     {
-        return ['css/app.css'];
+        return [];
     }
 
     /** @return string[] */
     private function getJavascript() : array
     {
-        return ['dist/translations.js'];
+        return ['dist/translations.bundle.js'];
     }
 
     public function js() : Response
