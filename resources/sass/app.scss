@@ -1,7 +1,8 @@
-$active: red;
 $white: #FFF;
 $light-gray: #e6ebf0;
 $gray: #a8a9af;
+$primary: #86ffcc;
+$active: $primary;
 
 #antenna-inline-translator {
   @import "tabs";
@@ -17,6 +18,7 @@ $gray: #a8a9af;
     height: 300px;
     background-color: white;
     border-top: 1px solid $light-gray;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
   }
 
   .translator-ui .trans-ui-row {
@@ -29,9 +31,23 @@ $gray: #a8a9af;
     }
   }
 
+  .trans-ui-translation {
+    padding: 1rem;
+    width: 100%;
+    border-right: 1px solid $light-gray;
+  }
+
   .select-list {
+    width: 100%;
     height: 100%;
     overflow-y: scroll;
+    padding: 1rem 0;
+    border: none;
+    border-right: 1px solid $light-gray;
+
+    option {
+      padding: 0.25rem 1rem;
+    }
   }
 }
 

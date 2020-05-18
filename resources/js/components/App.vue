@@ -6,14 +6,18 @@
                     <option v-for="translation in pageTranslations" :value="translation">{{ translation.key }}</option>
                 </select>
             </div>
-            <div>
+            <div class="trans-ui-translation">
                 {{ activeTranslation.value }}
             </div>
             <div>
                 <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
                     <tab v-for="(value, language) in activeTranslationValues" :name="language" :id="language">
-                        <textarea v-model="activeTranslationValues[language]"></textarea>
-                        <button @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">submit</button>
+                        <div>
+                            <textarea v-model="activeTranslationValues[language]"></textarea>
+                        </div>
+                        <div>
+                            <button @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">submit</button>
+                        </div>
                     </tab>
                 </tabs>
             </div>
