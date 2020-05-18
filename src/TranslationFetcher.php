@@ -87,7 +87,7 @@ class TranslationFetcher
                 continue;
             }
 
-            $translationContent = require_once $this->basePath . $languageFile['path'];
+            $translationContent = require $this->basePath . $languageFile['path'];
 
             $translations = array_merge(
                 $translations,
@@ -109,7 +109,6 @@ class TranslationFetcher
         $translations = [];
         foreach ($vendorFolders as $vendorFolder) {
             $vendorTranslations = $this->filesystem->listContents($vendorFolder['path']);
-
             foreach ($vendorTranslations as $vendorTranslation) {
                 if ($vendorTranslation['basename'] !== $language) {
                     continue;
@@ -119,7 +118,7 @@ class TranslationFetcher
                 assert(is_string($package));
                 $translations = array_merge(
                     $translations,
-                    $this->parseLanguageFile($language, $vendorTranslation['dirname'] . '/' . $package . '::')
+                    $this->parseLanguageFile($language, $vendorTranslation['dirname'] . '/', $package . '::')
                 );
             }
         }
