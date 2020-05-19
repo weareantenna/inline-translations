@@ -14,7 +14,6 @@ export default function(target) {
         find: /\~\~\#([a-zA-Z0-9\.\-\_]*)\#\~\#(.*?)\#\~\~/g,
         replace: function(node, match) {
             if (node.text !== match[0]) {
-                console.log(node, match);
                 return node.text;
             }
 

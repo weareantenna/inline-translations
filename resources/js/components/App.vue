@@ -1,13 +1,10 @@
 <template>
     <div class="translator-ui">
         <div class="trans-ui-row">
-            <div>
+            <div class="translations-list">
                 <select name="key" class="select-list" :size="pageTranslations.length" v-model="activeTranslation" @change="scrollKeyIntoView(activeTranslation.key)">
                     <option v-for="translation in pageTranslations" :value="translation">{{ translation.key }}</option>
                 </select>
-            </div>
-            <div class="trans-ui-translation">
-                {{ activeTranslation.value }}
             </div>
             <div>
                 <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
