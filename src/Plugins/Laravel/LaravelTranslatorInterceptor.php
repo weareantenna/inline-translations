@@ -15,7 +15,7 @@ class LaravelTranslatorInterceptor extends Translator
         $translation = parent::get($key, $replace, $locale, $fallback);
 
         if (is_string($translation)) {
-            return '~~#' . $key . '#~#' . $translation . '#~~';
+            return '~~#' . $key . '#~#' . htmlentities($translation) . '#~~';
         }
 
         return '~~#' . $key . '#~~';

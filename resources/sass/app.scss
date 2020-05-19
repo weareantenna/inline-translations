@@ -3,6 +3,7 @@ $light-gray: #e6ebf0;
 $gray: #a8a9af;
 $primary: #86ffcc;
 $active: $primary;
+$black: #1a1919;
 
 #antenna-inline-translator {
   @import "tabs";
@@ -59,13 +60,9 @@ body {
   font-style: inherit !important;
   position: relative;
 
-  &--active::after {
-    content: '';
-    display: block;
-    position: absolute;
-    height: 2px;
-    width: 100%;
+  &--active {
     background-color: $active;
+    color: $black;
   }
 
   &:hover i {

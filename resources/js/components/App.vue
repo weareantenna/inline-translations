@@ -39,33 +39,20 @@
             activeTranslation: {key: null, value: null },
             allTranslations: {},
             translationValue: null,
-            activeTranslationValues: []
+            activeTranslationValues: [],
+            observerConfig: {childList: true, subtree: true}
         }),
         mounted() {
-            // console.log(replacer(this.pageTranslations));
-            // this.pageTranslations = replacer();
-
-
-            const observer = new MutationObserver((mutationsList) => {
+            const observer = new MutationObserver((mutationsList, observer) => {
+                observer.disconnect();
                 for (let mutation of mutationsList) {
                     if (mutation.type === 'childList') {
-                        let translations = replacer();
-                        // console.log(translations);
-                        if (translations.length > 0) {
-                            console.log(translations);
-                            // this.pageTranslations = [...this.pageTranslations, ...translations];
-                        }
+                        this.pageTranslations = [...this.pageTranslations, ...replacer(mutation.target)];
                     }
                 }
+                observer.observe(document, this.observerConfig);
             });
-
-            observer.observe(document, {childList: true, subtree: true});
-
-
-            // document.addEventListener('DOMContentLoaded', () => {
-            //     this.pageTranslations = replacer(this.pageTranslations);
-            // });
-
+            observer.observe(document, this.observerConfig);
 
 
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
@@ -110,8 +97,11 @@
         },
         methods: {
             scrollKeyIntoView(key) {
-                document.querySelector(`var[data-translation-key="${key}"]`).scrollIntoView();
-                window.scrollBy(0, -20);
+                const element = document.querySelector(`var[data-translation-key="${key}"]`);
+                if (element) {
+                    element.scrollIntoView();
+                    window.scrollBy(0, -20);
+                }
             },
             submitTranslation(key, value, language) {
                 if (language = this.activeLanguage) {
