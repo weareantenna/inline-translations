@@ -5,10 +5,6 @@ const VInlineTranslations = {
                 [options.methodName]: function (key) {
                     const translation = this.$t(key);
 
-                    if (options.enable !== true) {
-                        return translation;
-                    }
-
                     if (translation) {
                         return `~~#${key}#~#${translation}#~~`;
                     }

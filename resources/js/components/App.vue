@@ -35,14 +35,39 @@
         components: { Tabs, Tab },
         data: () => ({
             config: {},
-            pageTranslations: {},
+            pageTranslations: [],
             activeTranslation: {key: null, value: null },
             allTranslations: {},
             translationValue: null,
             activeTranslationValues: []
         }),
         mounted() {
-            this.pageTranslations = replacer(this.pageTranslations);
+            // console.log(replacer(this.pageTranslations));
+            // this.pageTranslations = replacer();
+
+
+            const observer = new MutationObserver((mutationsList) => {
+                for (let mutation of mutationsList) {
+                    if (mutation.type === 'childList') {
+                        let translations = replacer();
+                        // console.log(translations);
+                        if (translations.length > 0) {
+                            console.log(translations);
+                            // this.pageTranslations = [...this.pageTranslations, ...translations];
+                        }
+                    }
+                }
+            });
+
+            observer.observe(document, {childList: true, subtree: true});
+
+
+            // document.addEventListener('DOMContentLoaded', () => {
+            //     this.pageTranslations = replacer(this.pageTranslations);
+            // });
+
+
+
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
 
             fetch('/' + this.config.prefix + '/all')
