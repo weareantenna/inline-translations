@@ -71,6 +71,7 @@ class AssetInjectionMiddleware
         }
 
         $config                     = config('inline-translations.routes');
+        $config                     = array_merge($config, config('localization'));
         $config['current_language'] = App::getLocale();
         $jsRoute                    = $this->getJsRouteFromManifest();
         $js                         = "<div id='antenna-inline-translator' data-config='" . json_encode($config) . "'><div id='antenna-inline-translator-app'></div></div><script type='text/javascript' src='{$jsRoute}'></script>\n";

@@ -3,12 +3,12 @@
         <div class="trans-ui-row">
             <div class="translations-list">
                 <select name="key" class="select-list" :size="pageTranslations.length" v-model="activeTranslation" @change="scrollKeyIntoView(activeTranslation.key)">
-                    <option v-for="translation in pageTranslations" :value="translation">{{ translation.key }}</option>
+                    <option :key="translation.key" v-for="translation in pageTranslations" :value="translation">{{ translation.key }}</option>
                 </select>
             </div>
             <div>
                 <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
-                    <tab v-for="(value, language) in activeTranslationValues" :name="language" :id="language">
+                    <tab :key="language" v-for="(value, language) in activeTranslationValues" :name="language" :id="language">
                         <div>
                             <textarea v-model="activeTranslationValues[language]"></textarea>
                         </div>
@@ -26,6 +26,7 @@
     import replacer from "../replacer";
     import Tabs from "./parts/Tabs";
     import Tab from "./parts/Tab";
+    import uniqueKeyFinder from "../uniqueKeyFinder";
 
     export default {
         name: "App",
@@ -44,7 +45,7 @@
                 observer.disconnect();
                 for (let mutation of mutationsList) {
                     if (mutation.type === 'childList') {
-                        this.pageTranslations = [...this.pageTranslations, ...replacer(mutation.target)];
+                        this.pageTranslations = uniqueKeyFinder([...this.pageTranslations, ...replacer(mutation.target)]);
                     }
                 }
                 observer.observe(document, this.observerConfig);
