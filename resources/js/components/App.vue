@@ -1,22 +1,34 @@
 <template>
-    <div class="translator-ui">
-        <div class="trans-ui-row">
-            <div class="translations-list">
-                <select name="key" class="select-list" :size="pageTranslations.length" v-model="activeTranslation" @change="scrollKeyIntoView(activeTranslation.key)">
-                    <option :key="translation.key" v-for="translation in pageTranslations" :value="translation">{{ translation.key }}</option>
-                </select>
-            </div>
-            <div>
-                <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
-                    <tab :key="language" v-for="(value, language) in activeTranslationValues" :name="language" :id="language">
-                        <div>
-                            <textarea v-model="activeTranslationValues[language]"></textarea>
-                        </div>
-                        <div>
-                            <button @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">submit</button>
-                        </div>
-                    </tab>
-                </tabs>
+    <div class="translator-wrapper">
+        <div class="show-hide-btn" @click="toggleShow">
+            <span v-if="show">Hide</span>
+            <span v-else>Show</span>
+        </div>
+        <div class="translator-ui">
+            <div class="trans-ui-row">
+                <div class="translations-list">
+                    <select name="key" class="select-list" :size="pageTranslations.length"
+                            v-model="activeTranslation" @change="scrollKeyIntoView(activeTranslation.key)">
+                        <option :key="translation.key" v-for="translation in pageTranslations" :value="translation">
+                            {{ translation.key }}
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
+                        <tab :key="language" v-for="(value, language) in activeTranslationValues" :name="language"
+                             :id="language">
+                            <div>
+                                <textarea v-model="activeTranslationValues[language]"></textarea>
+                            </div>
+                            <div>
+                                <button @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">
+                                    submit
+                                </button>
+                            </div>
+                        </tab>
+                    </tabs>
+                </div>
             </div>
         </div>
     </div>
@@ -30,15 +42,16 @@
 
     export default {
         name: "App",
-        components: { Tabs, Tab },
+        components: {Tabs, Tab},
         data: () => ({
             config: {},
             pageTranslations: [],
-            activeTranslation: {key: null, value: null },
+            activeTranslation: {key: null, value: null},
             allTranslations: {},
             translationValue: null,
             activeTranslationValues: [],
-            observerConfig: {childList: true, subtree: true}
+            observerConfig: {childList: true, subtree: true},
+            show: true
         }),
         mounted() {
             const observer = new MutationObserver((mutationsList, observer) => {
@@ -56,8 +69,10 @@
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
 
             fetch('/' + this.config.prefix + '/all')
-                    .then(response => response.json())
-                    .then(json => { this.allTranslations = json; });
+                .then(response => response.json())
+                .then(json => {
+                    this.allTranslations = json;
+                });
 
             // event needs to be on document for this to work
             document.addEventListener('click', (e) => {
@@ -74,9 +89,9 @@
             }, false);
         },
         computed: {
-          activeLanguage() {
-            return this.config.current_language;
-          }
+            activeLanguage() {
+                return this.config.current_language;
+            }
         },
         watch: {
             activeTranslation: function (activeTranslation) {
@@ -116,11 +131,15 @@
                     method: 'POST',
                     body: postData
                 }).then(response => response.json())
-                .then(json => {
-                    if (json.result) {
-                        window.alert('success');
-                    }
-                });
+                    .then(json => {
+                        if (json.result) {
+                            window.alert('success');
+                        }
+                    });
+            },
+            toggleShow() {
+                this.show = !this.show;
+                document.querySelector(".translator-wrapper").classList.toggle("animate");
             }
         }
     }
