@@ -10,7 +10,7 @@ const VInlineTranslations = {
                     }
 
                     if (translation) {
-                        return `~~#${key}#~#${translation}#~~`;
+                        return `~~#${key}#~#${htmlEntities(translation)}#~~`;
                     }
 
                     return `~~#${key}#~~`;
@@ -19,5 +19,9 @@ const VInlineTranslations = {
         });
     }
 };
+
+function htmlEntities(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 export default VInlineTranslations;
