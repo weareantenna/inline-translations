@@ -54,6 +54,7 @@
             show: true
         }),
         mounted() {
+            this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
             const observer = new MutationObserver((mutationsList, observer) => {
                 observer.disconnect();
                 for (let mutation of mutationsList) {
@@ -64,10 +65,6 @@
                 observer.observe(document, this.observerConfig);
             });
             observer.observe(document, this.observerConfig);
-
-
-            this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
-
             fetch('/' + this.config.prefix + '/all')
                 .then(response => response.json())
                 .then(json => {
@@ -99,7 +96,13 @@
                     element.classList.remove('trans-ui-element--active');
                 });
 
-                this.activeTranslationValues = this.allTranslations[activeTranslation.key];
+                this.activeTranslationValues = this.allTranslations[activeTranslation.key] || {};
+                for(let i = 0; i < this.config['supported-locales'].length; i++) {
+                    let locale = this.config['supported-locales'][i];
+                    if (!this.activeTranslationValues.hasOwnProperty(locale)) {
+                        this.activeTranslationValues[locale] = null;
+                    }
+                }
 
                 document.querySelectorAll(`var[data-translation-key="${activeTranslation.key}"]`).forEach(
                     location => {
