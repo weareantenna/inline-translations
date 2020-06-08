@@ -55,35 +55,9 @@
         }),
         mounted() {
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
-            const observer = new MutationObserver((mutationsList, observer) => {
-                observer.disconnect();
-                for (let mutation of mutationsList) {
-                    if (mutation.type === 'childList') {
-                        this.pageTranslations = uniqueKeyFinder([...this.pageTranslations, ...replacer(mutation.target)]);
-                    }
-                }
-                observer.observe(document, this.observerConfig);
-            });
-            observer.observe(document, this.observerConfig);
-            fetch('/' + this.config.prefix + '/all')
-                .then(response => response.json())
-                .then(json => {
-                    this.allTranslations = json;
-                });
-
-            // event needs to be on document for this to work
-            document.addEventListener('click', (e) => {
-                for (let target = e.target; target && target != this && target !== document; target = target.parentNode) {
-                    if (target.matches('.trans-ui-element i')) {
-                        e.preventDefault();
-                        this.activeTranslation = this.pageTranslations.find(
-                            trans => trans.key === target.parentElement.getAttribute('data-translation-key')
-                        );
-
-                        break;
-                    }
-                }
-            }, false);
+            this.observeDomForNewTranslations();
+            this.fetchAllTranslations();
+            this.addInlineClickEventListener();
         },
         computed: {
             activeLanguage() {
@@ -112,6 +86,40 @@
             }
         },
         methods: {
+            observeDomForNewTranslations() {
+                const observer = new MutationObserver((mutationsList, observer) => {
+                    observer.disconnect();
+                    for (let mutation of mutationsList) {
+                        if (mutation.type === 'childList') {
+                            this.pageTranslations = uniqueKeyFinder([...this.pageTranslations, ...replacer(mutation.target)]);
+                        }
+                    }
+                    observer.observe(document, this.observerConfig);
+                });
+                observer.observe(document, this.observerConfig);
+            },
+            fetchAllTranslations() {
+                fetch('/' + this.config.prefix + '/all')
+                    .then(response => response.json())
+                    .then(json => {
+                        this.allTranslations = json;
+                    });
+            },
+            addInlineClickEventListener() {
+                // event needs to be on document for this to work
+                document.addEventListener('click', (e) => {
+                    for (let target = e.target; target && target != this && target !== document; target = target.parentNode) {
+                        if (target.matches('.trans-ui-element i')) {
+                            e.preventDefault();
+                            this.activeTranslation = this.pageTranslations.find(
+                                trans => trans.key === target.parentElement.getAttribute('data-translation-key')
+                            );
+
+                            break;
+                        }
+                    }
+                }, false);
+            },
             scrollKeyIntoView(key) {
                 const element = document.querySelector(`var[data-translation-key="${key}"]`);
                 if (element) {
