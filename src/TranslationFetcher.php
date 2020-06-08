@@ -46,8 +46,6 @@ class TranslationFetcher
         return $translations;
     }
 
-    /** TODO: we should also return not translated values or handle this in the frontend so that new translations can be done */
-
     /** @return array<int|string,array<string, string>> */
     public function fetchAllGroupedByKeys() : array
     {
