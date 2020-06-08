@@ -66,7 +66,7 @@ class TranslationFetcher
     }
 
     /** @return string[] */
-    public function fetchByLanguage(string $language, string $basePath = '', string $prefix = '') : array
+    public function fetchByLanguage(string $language) : array
     {
         return array_merge(
             $this->parseLanguageFile($language),

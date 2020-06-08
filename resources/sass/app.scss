@@ -30,6 +30,13 @@ $black: #1a1919;
     height: 50px;
     background-color: #fff;
     z-index: 1;
+    padding: 10px;
+    background-color: $primary;
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   .translator-ui {
