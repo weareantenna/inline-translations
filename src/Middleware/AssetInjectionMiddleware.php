@@ -41,7 +41,7 @@ class AssetInjectionMiddleware
             return $response;
         }
 
-        //$content = $this->addCssBeforeClosingHeadTag($content);
+        $content = $this->addJsBeforeClosingHeadTag($content);
         $content = $this->addJsBeforeClosingBodyTag($content);
 
         // Update the new content and reset the content length
@@ -51,17 +51,16 @@ class AssetInjectionMiddleware
         return $response;
     }
 
-    private function addCssBeforeClosingHeadTag(string $content) : string
+    private function addJsBeforeClosingHeadTag(string $content) : string
     {
         $headPos = strripos($content, '</head>');
         if (! is_int($headPos)) {
             return $content;
         }
 
-        $cssRoute = preg_replace('/https?:/', '', route('inline-translations.assets.css'));
-        $css      = "<link rel='stylesheet' type='text/css' property='stylesheet' href='{$cssRoute}'>\n";
+        $js = "<script type='text/javascript'>window.translationModeActive=true;</script>\n";
 
-        return substr($content, 0, $headPos) . $css . substr($content, $headPos);
+        return substr($content, 0, $headPos) . $js . substr($content, $headPos);
     }
 
     private function addJsBeforeClosingBodyTag(string $content) : string
@@ -75,7 +74,8 @@ class AssetInjectionMiddleware
         $config                     = array_merge($config, config('localization'));
         $config['current_language'] = App::getLocale();
         $jsRoute                    = $this->getJsRouteFromManifest();
-        $js                         = "<div id='antenna-inline-translator' data-config='" . json_encode($config) . "'><div id='antenna-inline-translator-app'></div></div><script type='text/javascript' src='{$jsRoute}'></script>\n";
+        $js                         = "<div id='antenna-inline-translator' data-config='" . json_encode($config) . "'><div id='antenna-inline-translator-app'></div></div>"
+            . "<script type='text/javascript' src='{$jsRoute}'></script>\n";
 
         return substr($content, 0, $bodyPos) . $js . substr($content, $bodyPos);
     }

@@ -5,7 +5,7 @@ const VInlineTranslations = {
                 [options.methodName]: function (key) {
                     const translation = this.$t(key);
 
-                    if (window.translationModeActive === 0) {
+                    if (window.translationModeActive !== true) {
                         return translation;
                     }
 
