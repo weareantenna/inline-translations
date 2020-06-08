@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations\Test;
 
 use Antenna\InlineTranslations\Exceptions\InvalidKeyException;
-use Antenna\InlineTranslations\Exceptions\InvalidTranslationFileException;
 use Antenna\InlineTranslations\TranslationUpdater;
 use League\Flysystem\Adapter\NullAdapter;
 use League\Flysystem\Filesystem;
@@ -15,7 +14,7 @@ class TranslationUpdaterTest extends TestCase
 {
     private TranslationUpdater $updater;
 
-    public function setUp(): void
+    public function setUp() : void
     {
         $adapter = new NullAdapter();
         $adapter->setPathPrefix('tests/translations');
@@ -24,13 +23,13 @@ class TranslationUpdaterTest extends TestCase
         $this->updater = new TranslationUpdater($filesystem);
     }
 
-    public function testInvalidKey(): void
+    public function testInvalidKey() : void
     {
         $this->expectException(InvalidKeyException::class);
         $this->updater->updateTranslation('key', 'value', 'nl');
     }
 
-    public function testUpdatingTranslation(): void
+    public function testUpdatingTranslation() : void
     {
         $result = $this->updater->updateTranslation('app.key', 'value', 'nl');
         $this->assertTrue($result);

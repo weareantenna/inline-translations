@@ -13,14 +13,14 @@ class TranslationFetcherTest extends TestCase
 {
     private TranslationFetcher $fetcher;
 
-    public function setUp(): void
+    public function setUp() : void
     {
         $adapter       = new Local(__DIR__ . '/translations');
         $filesystem    = new Filesystem($adapter);
         $this->fetcher = new TranslationFetcher($filesystem);
     }
 
-    public function testReadAllTranslationsPerLanguage(): void
+    public function testReadAllTranslationsPerLanguage() : void
     {
         $translations = $this->fetcher->fetchAll();
 
@@ -28,7 +28,7 @@ class TranslationFetcherTest extends TestCase
         $this->assertEquals('Maandag', $translations['nl']['app.days.monday']);
     }
 
-    public function testReadNestedKeysPerLanguage(): void
+    public function testReadNestedKeysPerLanguage() : void
     {
         $translations = $this->fetcher->fetchAll();
 
@@ -36,33 +36,33 @@ class TranslationFetcherTest extends TestCase
         $this->assertEquals('Kerstmis', $translations['nl']['app.holidays.december.christmas']);
     }
 
-    public function testReadVendorKeys(): void
+    public function testReadVendorKeys() : void
     {
         $translations = $this->fetcher->fetchAll();
 
         $this->assertEquals('vendor string', $translations['en']['PackageName::vendor.key']);
     }
 
-    public function testFetchSingleLanguage(): void
+    public function testFetchSingleLanguage() : void
     {
         $translations = $this->fetcher->fetchByLanguage('en');
 
         $this->assertEquals('Monday', $translations['app.days.monday']);
     }
 
-    public function testFetchUnexistingLanguage(): void
+    public function testFetchUnexistingLanguage() : void
     {
         $translations = $this->fetcher->fetchByLanguage('fr');
         $this->assertEmpty($translations);
     }
 
-    public function testFetchedAllTranslationsGroupedByKey(): void
+    public function testFetchedAllTranslationsGroupedByKey() : void
     {
         $translations = $this->fetcher->fetchAllGroupedByKeys();
 
         $this->assertEquals([
             'nl' => 'Dinsdag',
-            'en' => 'Tuesday'
+            'en' => 'Tuesday',
         ], $translations['app.days.tuesday']);
     }
 }

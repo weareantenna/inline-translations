@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations\Plugins\Laravel;
 
 use Illuminate\Translation\Translator;
+use function htmlentities;
 use function is_string;
 
 class LaravelTranslatorInterceptor extends Translator

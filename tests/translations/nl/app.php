@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'days' => [
         'monday' => 'Maandag',
@@ -8,15 +10,13 @@ return [
         'thursday' => 'Donderdag',
         'friday' => 'Vrijdag',
         'saturday' => 'Zaterdag',
-        'sunday' => 'Zondag,'
+        'sunday' => 'Zondag,',
     ],
     'holidays' => [
-        'january' => [
-            'newyear' => 'Nieuwjaar'
-        ],
+        'january' => ['newyear' => 'Nieuwjaar'],
         'december' => [
             'christmas' => 'Kerstmis',
-            'Newyearseve' => 'Oudejaarsavond'
-        ]
-    ]
+            'Newyearseve' => 'Oudejaarsavond',
+        ],
+    ],
 ];

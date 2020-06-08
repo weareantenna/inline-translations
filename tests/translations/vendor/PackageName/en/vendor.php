@@ -1,5 +1,5 @@
 <?php
 
-return [
-    'key' => 'vendor string'
-];
+declare(strict_types=1);
+
+return ['key' => 'vendor string'];

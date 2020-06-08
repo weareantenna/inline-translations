@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response as BaseResponse;
+use function array_merge;
 use function config;
 use function file_get_contents;
 use function is_int;
