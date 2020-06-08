@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations\Controllers;
 
+use Antenna\InlineTranslations\Events\TranslationUpdated;
+use Antenna\InlineTranslations\Models\TranslationKey;
 use Antenna\InlineTranslations\Requests\TranslationRequest;
 use Antenna\InlineTranslations\TranslationFetcher;
 use Antenna\InlineTranslations\TranslationUpdater;
@@ -26,6 +28,7 @@ class ApiController extends BaseController
     public function upsert(TranslationRequest $request, TranslationUpdater $updater) : JsonResponse
     {
         $result = $updater->updateTranslation($request->key, $request->value, $request->language);
+        event(new TranslationUpdated(TranslationKey::fromString($request->key), $request->value, $request->language));
 
         return new JsonResponse(['result' => $result]);
     }
