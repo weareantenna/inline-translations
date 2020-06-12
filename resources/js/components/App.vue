@@ -1,7 +1,11 @@
 <template>
     <div class="translator-wrapper">
         <div class="show-hide-btn" @click="toggleShow">
-            <svg height="512" width="512" x="0px" y="0px" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M349.6 162.5a175 175 0 10-187.1 187A175.2 175.2 0 00337 512c96.5 0 175-78.5 175-175 0-92.3-71.8-168-162.4-174.5zM30 175a145 145 0 01289.5-12.1c-35.8 3.5-68.5 18-94.7 40L190.2 99.2a15 15 0 00-28.4 0l-48 144a15 15 0 0028.4 9.4l7.3-21.7h48.4a174 174 0 00-35 88.5A145 145 0 0130 175zm162.5 26h-33l16.5-49.6zM337 482c-80 0-145-65-145-145s65-145 145-145 145 65 145 145-65 145-145 145z"/><path d="M312 265h-40a15 15 0 000 30h24.2c-2.3 25.7-10.7 67-33.6 85.3a15 15 0 1018.8 23.4c45-36 45.6-120.1 45.6-123.7a15 15 0 00-15-15zM400 305h-17v-41a15 15 0 00-30 0v144a15 15 0 0030 0v-73h17a15 15 0 000-30zM384 63a65 65 0 0165 65 15 15 0 0030 0c0-52.4-42.6-95-95-95a15 15 0 000 30zM128 449a65 65 0 01-65-65 15 15 0 00-30 0c0 52.4 42.6 95 95 95a15 15 0 000-30z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="29.981" viewBox="0 0 30 29.981">
+                <g id="Group_2701" data-name="Group 2701" transform="translate(-1 -1.045)">
+                    <path id="Path_43739" data-name="Path 43739" d="M31,12A11,11,0,0,0,9.43,9H4a3,3,0,0,0-3,3V24a3,3,0,0,0,2.72,3L3,29.76a1,1,0,0,0,1.5,1.11L11.27,27H21a3,3,0,0,0,3-3V22.24A11,11,0,0,0,31,12ZM21,20.67V18h1.92A5.816,5.816,0,0,1,21,20.67ZM15.83,20a9.056,9.056,0,0,1-2.51-2H15A12.047,12.047,0,0,0,15.83,20ZM12,8h2.4a19.186,19.186,0,0,0-.4,3H11A8.877,8.877,0,0,1,12,8Zm17,3H26a19.051,19.051,0,0,0-.38-3H28a8.873,8.873,0,0,1,.93,3Zm-5,0H21V8h2.56A16.976,16.976,0,0,1,24,11Zm-5,0H16a16.958,16.958,0,0,1,.42-3H19Zm0,2v3H16.44A16.976,16.976,0,0,1,16,13Zm-5,0a19.051,19.051,0,0,0,.38,3H12a8.886,8.886,0,0,1-.89-3Zm5,5v2.67A5.816,5.816,0,0,1,17.08,18Zm2-2V13h3a16.958,16.958,0,0,1-.42,3Zm5-3h3a8.877,8.877,0,0,1-1,3H25.6A19.186,19.186,0,0,0,26,13Zm.7-7H25a12.072,12.072,0,0,0-.88-2,9.057,9.057,0,0,1,2.55,2ZM22.92,6H21V3.33A5.816,5.816,0,0,1,22.92,6ZM19,3.33V6H17.08A5.816,5.816,0,0,1,19,3.33ZM15.83,4A12.047,12.047,0,0,0,15,6H13.33A9.063,9.063,0,0,1,15.83,4ZM22,24a1,1,0,0,1-1,1H11a1.006,1.006,0,0,0-.5.13L5.54,28,6,26.24a1,1,0,0,0-.73-1.211A.981.981,0,0,0,5,25H4a1,1,0,0,1-1-1V12a1,1,0,0,1,1-1H9.05c0,.33-.05.66-.05,1A11,11,0,0,0,22,22.81Zm2.17-4A12.047,12.047,0,0,0,25,18h1.63A9.065,9.065,0,0,1,24.17,20Z" fill="#212529"/>
+                </g>
+            </svg>
         </div>
         <div class="translator-ui">
             <div class="trans-ui-row">
@@ -21,9 +25,10 @@
                                 <textarea v-model="activeTranslationValues[language]"></textarea>
                             </div>
                             <div>
-                                <button @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">
+                                <button class="round" @click="submitTranslation(activeTranslation.key, activeTranslationValues[language], language)">
                                     submit
                                 </button>
+                                <span class="ml-4 success-message" v-if="submittedSuccessfully" v-html="'Success!'" />
                             </div>
                         </tab>
                     </tabs>
@@ -50,7 +55,8 @@
             translationValue: null,
             activeTranslationValues: [],
             observerConfig: {childList: true, subtree: true},
-            show: true
+            show: true,
+            submittedSuccessfully: false
         }),
         mounted() {
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
@@ -143,7 +149,11 @@
                 }).then(response => response.json())
                     .then(json => {
                         if (json.result) {
-                            window.alert('success');
+                            this.submittedSuccessfully = true;
+                            window.setInterval(()=>{
+                                this.submittedSuccessfully = false;
+                            }, 3000);
+
                         }
                     });
             },

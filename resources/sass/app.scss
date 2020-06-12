@@ -1,7 +1,7 @@
 $white: #FFF;
 $light-gray: #e6ebf0;
 $gray: #a8a9af;
-$primary: #86ffcc;
+$primary: #06F9AE;
 $active: $primary;
 $black: #1a1919;
 
@@ -16,19 +16,17 @@ $black: #1a1919;
   overflow-x: hidden;
 
   .translator-wrapper {
-    width: 350px;
     display: flex;
-    transition: all .3s ease;
   }
 
   .animate{
-    transform: translateX(300px);
+    right: -300px;
+    position: fixed;
   }
 
   .show-hide-btn {
     width: 50px;
     height: 50px;
-    background-color: #fff;
     z-index: 1;
     padding: 10px;
     background-color: $primary;
@@ -86,10 +84,16 @@ $black: #1a1919;
   &--active {
     background-color: $active;
     color: $black;
+
+    i {
+      display: block !important;
+      margin-left: -20px !important;
+    }
   }
 
   &:hover i {
     display: block;
+    margin-left: -20px;
   }
 
   i {
@@ -101,6 +105,10 @@ $black: #1a1919;
     width: 20px;
     height: 100%;
     background: $active;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij4KICA8dGV4dCBpZD0iXyIgZGF0YS1uYW1lPSLvjIMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEgMSkiIGZpbGw9IiMyMTI1MjkiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtZmFtaWx5PSJGb250QXdlc29tZTVQcm8tU29saWQsICdGb250IEF3ZXNvbWUgNSBQcm8nIj48dHNwYW4geD0iMCIgeT0iMTEiPu+MgzwvdHNwYW4+PC90ZXh0Pgo8L3N2Zz4K");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
   }
 }
 
@@ -112,4 +120,22 @@ $black: #1a1919;
 .slide-fade-enter, .slide-fade-leave-to {
   transition: all .3s ease;
   transform: translateX(300px);
+}
+
+button.round {
+  border-radius: 16px;
+  border: 1px $primary solid !important;
+}
+
+button.round:hover {
+  background-color: $white !important;
+}
+
+button.round:focus {
+  outline: none;
+}
+
+.success-message {
+  color: $primary;
+  font-weight: bold;
 }
