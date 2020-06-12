@@ -57,6 +57,6 @@ class TranslationUpdater
             throw TranslationUpdateException::unableToMergeTranslations($key, $value);
         }
 
-        return array_merge($content, $newTranslation);
+        return array_replace_recursive($content, $newTranslation);
     }
 }
