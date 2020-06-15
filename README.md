@@ -11,18 +11,21 @@ We advise you not to use this package in production environments. Translations c
 
 Add the package as a dependency in your project:
 ```
-composer require weareantenna/inline-translations
+composer require antenna/inline-translations
 ```
 
-Once the package was added to the requirements, you can publish the configuration:
-```
-composer require weareantenna/inline-translations
-```
-
-
-You can publish the configuration by running the command below. This will add the file `inline-translations.php` where you can configure the package.
+You must publish the configuration by running the command below. This will add the file `config/inline-translations.php` where you can configure the package. A Vue component will be published as well (`resources/assets/vendor/v-inline-translations/app.js`). You can use this as a Vue plugin for your vue instance. This is only needed if you use translations in your Vue components.
 ```
 php artisan vendor:publish --provider="Antenna\InlineTranslations\InlineTranslationsServiceProvider"
+```
+
+(Optional) use the Vue plugin. the `methodName` parameter defines the translation function that you use within your Vue components. This function will be overwritten by this package (when translation mode is active):
+```
+import VInlineTranslations from "resources/assets/vendor/v-inline-translations/app";
+Vue.use(VInlineTranslations, {methodName: '__t'});
+new Vue({
+  ...
+});
 ```
 
 ## Configuration
