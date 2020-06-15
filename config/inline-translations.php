@@ -5,5 +5,6 @@ return [
         'prefix'     => 'inline-translations',
         'middleware' => null,
     ],
-    'translation_folder' => 'resources/lang'
+    'translation_folder' => 'resources/lang',
+    'widget_width' => 350
 ];

@@ -70,7 +70,7 @@ class AssetInjectionMiddleware
             return $content;
         }
 
-        $config                     = config('inline-translations.routes');
+        $config                     = config('inline-translations');
         $config                     = array_merge($config, config('localization'));
         $config['current_language'] = App::getLocale();
         $jsRoute                    = $this->getJsRouteFromManifest();

@@ -1,5 +1,5 @@
 <template>
-    <div class="translator-wrapper">
+    <div class="translator-wrapper" :style="{ 'width': (config.widget_width || 350) + 'px' }">
         <div class="show-hide-btn" @click="toggleShow">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="29.981" viewBox="0 0 30 29.981">
                 <g id="Group_2701" data-name="Group 2701" transform="translate(-1 -1.045)">
@@ -10,12 +10,28 @@
         <div class="translator-ui">
             <div class="trans-ui-row">
                 <div class="translations-list">
-                    <select name="key" class="select-list" :size="pageTranslations.length"
-                            v-model="activeTranslation" @change="scrollKeyIntoView(activeTranslation.key)">
-                        <option :key="translation.key" v-for="translation in pageTranslations" :value="translation">
-                            {{ translation.key }}
-                        </option>
-                    </select>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>item</th>
+                                <th v-for="locale in config['supported-locales']">{{ locale }}</th>
+                            </tr>
+                        </thead>
+                        <tbody name="key" class="select-list" @change="scrollKeyIntoView(activeTranslation.key)">
+                            <tr
+                                :key="translation.key"
+                                v-for="translation in pageTranslations"
+                                @click="activeTranslation = translation"
+                                :class="{'active': activeTranslation === translation}"
+                                class="select-list--key"
+                            >
+                                <td>{{ translation.key }}</td>
+                                <td v-for="locale in config['supported-locales']">
+                                    <template v-if="isTranslated(translation.key, locale)"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check" class="svg-inline--fa fa-check fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"></path></svg></template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div>
                     <tabs v-if="activeTranslationValues" :activeTabName="activeLanguage">
@@ -74,14 +90,7 @@
                 let active = document.querySelectorAll('var.trans-ui-element--active').forEach(element => {
                     element.classList.remove('trans-ui-element--active');
                 });
-
                 this.activeTranslationValues = this.allTranslations[activeTranslation.key] || {};
-                for(let i = 0; i < this.config['supported-locales'].length; i++) {
-                    let locale = this.config['supported-locales'][i];
-                    if (!this.activeTranslationValues.hasOwnProperty(locale)) {
-                        this.activeTranslationValues[locale] = null;
-                    }
-                }
 
                 document.querySelectorAll(`var[data-translation-key="${activeTranslation.key}"]`).forEach(
                     location => {
@@ -104,11 +113,22 @@
                 observer.observe(document, this.observerConfig);
             },
             fetchAllTranslations() {
-                fetch('/' + this.config.prefix + '/all')
+                fetch('/' + this.config.routes.prefix + '/all')
                     .then(response => response.json())
                     .then(json => {
                         this.allTranslations = json;
+                        this.completeTranslations();
                     });
+            },
+            completeTranslations() {
+                for (let j in this.allTranslations) {
+                    for(let i = 0; i < this.config['supported-locales'].length; i++) {
+                        let locale = this.config['supported-locales'][i];
+                        if (!this.allTranslations[j].hasOwnProperty(locale)) {
+                            this.allTranslations[j][locale] = null;
+                        }
+                    }
+                }
             },
             addInlineClickEventListener() {
                 // event needs to be on document for this to work
@@ -143,7 +163,7 @@
                 postData.append('key', key);
                 postData.append('value', value);
                 postData.append('language', language);
-                fetch('/' + this.config.prefix + '/upsert', {
+                fetch('/' + this.config.routes.prefix + '/upsert', {
                     method: 'POST',
                     body: postData
                 }).then(response => response.json())
@@ -160,6 +180,13 @@
             toggleShow() {
                 this.show = !this.show;
                 document.querySelector(".translator-wrapper").classList.toggle("animate");
+            },
+            isTranslated(key, locale) {
+                if (typeof this.allTranslations[key] === 'undefined') {
+                    return false;
+                }
+
+                return this.allTranslations[key][locale] !== null;
             }
         }
     }

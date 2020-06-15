@@ -8,15 +8,14 @@ $black: #1a1919;
 #antenna-inline-translator {
   @import "tabs";
 
-  width: 350px;
-  position: fixed;
-  z-index: 1000000;
-  top: 0;
-  right: 0;
-  overflow-x: hidden;
 
   .translator-wrapper {
     display: flex;
+    position: fixed;
+    z-index: 1000000;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
   }
 
   .animate{
@@ -38,6 +37,7 @@ $black: #1a1919;
   }
 
   .translator-ui {
+    width: 100%;
     height: 100vh;
     background-color: white;
     box-shadow: 0px 0px 20px 0px #00000036;
@@ -53,8 +53,31 @@ $black: #1a1919;
     }
 
     .translations-list {
-      width: 300px;
+      width: 100%;
       height: 60%;
+      padding: 0.5rem 0;
+      overflow-y: scroll;
+
+      table {
+        position: relative;
+        border-collapse: collapse;
+      }
+
+      th {
+        position: sticky;
+      }
+
+      th, td {
+        padding: 0.125rem 0.25rem;
+
+        &:first-child {
+          padding-left: 1rem;
+        }
+
+        &:last-child {
+          padding-right: 1rem;
+        }
+      }
     }
   }
 
@@ -70,9 +93,25 @@ $black: #1a1919;
     padding: 1rem 0;
     border: none;
     border-right: 1px solid $light-gray;
+  }
 
-    option {
-      padding: 0.25rem 1rem;
+  .select-list--key {
+    cursor: pointer;
+
+    svg {
+      width: 12px;
+      height: 12px;
+      color: $active;
+    }
+
+    &.active,
+    &:hover {
+      background-color: $active;
+      color: $black;
+
+      svg {
+        color: $black;
+      }
     }
   }
 }
