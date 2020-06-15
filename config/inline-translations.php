@@ -24,5 +24,10 @@ return [
      * This parameter defines the width of the widget when it is opened. This can be changed depending
      * on the amount of languages you are supporting, in order to get a better overview.
      */
-    'widget_width' => 350
+    'widget_width' => 350,
+    /**
+     * Here you can define on which environments, translations are possible.
+     * When the active environment is not in the array underneath, the tool will not be available.
+     */
+    'translation_environments' => ['local']
 ];

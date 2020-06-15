@@ -30,7 +30,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
         ], 'vue-assets');
 
-        if (! $this->isTranslationModeActive()) {
+        if (!$this->isTranslationModeActive() || !$this->allowedEnvironment()) {
+            return;
+        }
+
+        if (!$this->app->environment($this->app['config']['inline-translations.translation_environments'])) {
             return;
         }
 
@@ -39,6 +43,10 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
     public function register() : void
     {
+        if (!$this->allowedEnvironment()) {
+            return;
+        }
+
         $this->mergeConfigFrom(__DIR__ . '/../config/inline-translations.php', 'inline-translations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'inlineTranslations');
@@ -73,6 +81,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
     private function isTranslationModeActive() : bool
     {
         return (bool) $this->app['request']->cookie('inline-translations-active') === true;
+    }
+
+    private function allowedEnvironment() : bool
+    {
+        return $this->app->environment($this->app['config']['inline-translations.translation_environments']);
     }
 
     protected function getFilesystem() : Filesystem
