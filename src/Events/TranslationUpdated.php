@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Antenna\InlineTranslations\Events;
 
 use Antenna\InlineTranslations\Models\TranslationKey;
@@ -12,8 +14,8 @@ class TranslationUpdated
 
     public function __construct(TranslationKey $key, $newValue, $locale)
     {
-        $this->key = $key;
+        $this->key      = $key;
         $this->newValue = $newValue;
-        $this->locale = $locale;
+        $this->locale   = $locale;
     }
 }

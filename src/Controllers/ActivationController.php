@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Cookie;
 
 class ActivationController extends BaseController
 {
-    public function enable(): RedirectResponse
+    public function enable() : RedirectResponse
     {
         return (new RedirectResponse('/'))->withCookie('inline-translations-active', true);
     }
 
-    public function disable(): RedirectResponse
+    public function disable() : RedirectResponse
     {
         return (new RedirectResponse('/'))->withCookie(Cookie::forget('inline-translations-active'));
     }

@@ -30,11 +30,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
         ], 'vue-assets');
 
-        if (!$this->isTranslationModeActive() || !$this->allowedEnvironment()) {
+        if (! $this->isTranslationModeActive() || ! $this->allowedEnvironment()) {
             return;
         }
 
-        if (!$this->app->environment($this->app['config']['inline-translations.translation_environments'])) {
+        if (! $this->app->environment($this->app['config']['inline-translations.translation_environments'])) {
             return;
         }
 
@@ -43,7 +43,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
     public function register() : void
     {
-        if (!$this->allowedEnvironment()) {
+        if (! $this->allowedEnvironment()) {
             return;
         }
 

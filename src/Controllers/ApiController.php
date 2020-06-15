@@ -11,6 +11,7 @@ use Antenna\InlineTranslations\TranslationFetcher;
 use Antenna\InlineTranslations\TranslationUpdater;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
+use function event;
 
 class ApiController extends BaseController
 {
