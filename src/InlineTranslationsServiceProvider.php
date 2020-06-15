@@ -72,7 +72,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
     private function isTranslationModeActive() : bool
     {
-        return $this->app['request']->query($this->app['config']['inline-translations.url_query']) === 'true';
+        return (bool) $this->app['request']->cookie('inline-translations-active') === true;
     }
 
     protected function getFilesystem() : Filesystem
