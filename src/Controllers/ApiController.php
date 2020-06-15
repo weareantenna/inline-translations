@@ -9,9 +9,9 @@ use Antenna\InlineTranslations\Models\TranslationKey;
 use Antenna\InlineTranslations\Requests\TranslationRequest;
 use Antenna\InlineTranslations\TranslationFetcher;
 use Antenna\InlineTranslations\TranslationUpdater;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
-use function event;
 
 class ApiController extends BaseController
 {
@@ -26,10 +26,16 @@ class ApiController extends BaseController
         return new JsonResponse($translations);
     }
 
-    public function upsert(TranslationRequest $request, TranslationUpdater $updater) : JsonResponse
+    public function upsert(TranslationRequest $request, TranslationUpdater $updater, Dispatcher $events) : JsonResponse
     {
         $result = $updater->updateTranslation($request->key, $request->value, $request->language);
-        event(new TranslationUpdated(TranslationKey::fromString($request->key), $request->value, $request->language));
+        $events->dispatch(
+            new TranslationUpdated(
+                TranslationKey::fromString($request->key),
+                $request->value,
+                $request->language
+            )
+        );
 
         return new JsonResponse(['result' => $result]);
     }
