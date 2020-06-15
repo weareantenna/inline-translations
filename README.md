@@ -20,7 +20,7 @@ composer require weareantenna/inline-translations
 ```
 
 
-You can publish the configuration by running the command below. This will add the file `` where you can configure the package.
+You can publish the configuration by running the command below. This will add the file `inline-translations.php` where you can configure the package.
 ```
 php artisan vendor:publish --provider="Antenna\InlineTranslations\InlineTranslationsServiceProvider"
 ```
