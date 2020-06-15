@@ -10,7 +10,9 @@ to sync your translations to your production environment.
 
 Require this package in your composer.json and run composer update or
 
-`composer require weareantenna/inline-translations`
+```
+composer require weareantenna/inline-translations
+```
 
 After this update you'll need to
 
