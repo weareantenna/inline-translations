@@ -1,5 +1,7 @@
 # Inline translations manager
 
+![Screenshot of inline translation tool][screenshot]
+
 This package enables you to manage translations and actually translate your Laravel application inline.
 
 We advise you not to use this package in production environments. Translations can be managed within staging or development environments and synced to production with a custom implementation (or via your git repository).
@@ -80,3 +82,6 @@ There are some things we would like to add in the future
 
 * React translations
 * An integration / combination with the [translations manager by Barry vd Heuvel](https://github.com/barryvdh/laravel-translation-manager)
+
+
+[screenshot]: https://i.ibb.co/s5P23Ft/screely-1592219274102.png "Translator screenshot"
