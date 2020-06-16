@@ -28,7 +28,11 @@ class TranslationUpdater
     {
         $key              = TranslationKey::fromString($key);
         $file             = $key->getTranslationFileForLanguage($language);
-        $translationArray = require $this->basePath . '/' . $file;
+        $translationArray = [];
+
+        if (file_exists($this->basePath . '/' . $file)) {
+            $translationArray = require $this->basePath . '/' . $file;
+        }
 
         if (! is_array($translationArray)) {
             throw InvalidTranslationFileException::noArray($this->basePath . '/' . $file);

@@ -97,6 +97,15 @@
                         location.classList.add('trans-ui-element--active');
                     }
                 );
+            },
+            pageTranslations: function(pageTranslations) {
+                let existingKeys = Object.keys(this.allTranslations);
+                let newTranslations = pageTranslations.filter(v => !existingKeys.includes(v.key));
+                for (let i = 0; i < newTranslations.length; i++) {
+                    this.allTranslations[newTranslations[i].key] = {};
+                }
+
+                this.completeTranslations();
             }
         },
         methods: {
@@ -153,7 +162,7 @@
                 }
             },
             submitTranslation(key, value, language) {
-                if (language = this.activeLanguage) {
+                if (language === this.activeLanguage) {
                     document.querySelectorAll(`var[data-translation-key="${key}"]`).forEach(element => {
                         element.innerHTML = value + '<i></i>';
                     });
@@ -163,6 +172,7 @@
                 postData.append('key', key);
                 postData.append('value', value);
                 postData.append('language', language);
+                postData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
                 fetch('/' + this.config.routes.prefix + '/upsert', {
                     method: 'POST',
                     body: postData
@@ -170,10 +180,11 @@
                     .then(json => {
                         if (json.result) {
                             this.submittedSuccessfully = true;
-                            window.setInterval(()=>{
-                                this.submittedSuccessfully = false;
-                            }, 3000);
-
+                            fetch('/' + this.config.routes.prefix + '/trigger-event/update').then(() => {
+                                window.setInterval(()=>{
+                                    this.submittedSuccessfully = false;
+                                }, 3000);
+                            });
                         }
                     });
             },
