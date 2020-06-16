@@ -1,19 +1,21 @@
 const VInlineTranslations = {
     install(Vue, options) {
+        Vue.prototype.$parentTranslationFunction = Vue.options.methods[options.methodName];
+
         Vue.mixin({
             methods: {
-                [options.methodName]: function (...key) {
-                    const translation = this.$t(...key);
+                [options.methodName]: function (key, ...values) {
+                    const translation = this.$parentTranslationFunction(key, ...values);
 
                     if (window.translationModeActive !== true) {
                         return translation;
                     }
 
                     if (translation) {
-                        return `~~#${key[0]}#~#${htmlEntities(translation)}#~~`;
+                        return `~~#${key}#~#${htmlEntities(translation)}#~~`;
                     }
 
-                    return `~~#${key[0]}#~~`;
+                    return `~~#${key}#~~`;
                 }
             }
         });
