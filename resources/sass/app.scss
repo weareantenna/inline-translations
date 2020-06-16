@@ -58,14 +58,10 @@ $black: #1a1919;
       padding: 0.5rem 0;
       overflow-y: scroll;
       border-bottom: 4px solid $light-gray;
+      position: relative;
 
       table {
-        position: relative;
         border-collapse: collapse;
-      }
-
-      th {
-        position: sticky;
       }
 
       th, td {

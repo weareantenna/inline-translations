@@ -17,13 +17,14 @@
                                 <th v-for="locale in config['supported-locales']">{{ locale }}</th>
                             </tr>
                         </thead>
-                        <tbody name="key" class="select-list" @change="scrollKeyIntoView(activeTranslation.key)">
+                        <tbody name="key" class="select-list">
                             <tr
                                 :key="translation.key"
                                 v-for="translation in pageTranslations"
-                                @click="activeTranslation = translation"
+                                @click="scrollKeyIntoView(translation.key); activeTranslation = translation"
                                 :class="{'active': activeTranslation === translation}"
                                 class="select-list--key"
+                                :data-key="translation.key"
                             >
                                 <td>{{ translation.key }}</td>
                                 <td v-for="locale in config['supported-locales']">
@@ -145,9 +146,11 @@
                     for (let target = e.target; target && target != this && target !== document; target = target.parentNode) {
                         if (target.matches('.trans-ui-element i')) {
                             e.preventDefault();
+                            let key = target.parentElement.getAttribute('data-translation-key');
                             this.activeTranslation = this.pageTranslations.find(
-                                trans => trans.key === target.parentElement.getAttribute('data-translation-key')
+                                trans => trans.key === key
                             );
+                            this.scrollSelectListToKey(key);
 
                             break;
                         }
@@ -159,6 +162,14 @@
                 if (element) {
                     element.scrollIntoView();
                     window.scrollBy(0, -20);
+                }
+            },
+            scrollSelectListToKey(key) {
+                console.log(key);
+                const element = document.querySelector(`.select-list--key[data-key="${key}"`);
+                console.log(element);
+                if (element) {
+                    element.scrollIntoView({ block: 'center', inline: 'start' });
                 }
             },
             submitTranslation(key, value, language) {
