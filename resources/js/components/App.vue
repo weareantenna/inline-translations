@@ -165,9 +165,7 @@
                 }
             },
             scrollSelectListToKey(key) {
-                console.log(key);
                 const element = document.querySelector(`.select-list--key[data-key="${key}"`);
-                console.log(element);
                 if (element) {
                     element.scrollIntoView({ block: 'center', inline: 'start' });
                 }
