@@ -2,7 +2,7 @@ import findAndReplaceDOMText from 'findandreplacedomtext';
 
 export default function(target) {
     let translationStrings = [];
-    const matches = target.innerHTML.matchAll(/[^"](\~\~\#([a-zA-Z0-9._-]*)\#\~\#(.*?)\#\~\~)[^"]/gs);
+    const matches = target.innerHTML.matchAll(/(\~\~\#([a-zA-Z0-9._-]*)\#\~\#(.*?)\#\~\~)/gs);
     for (let match of matches) {
         translationStrings.push({
             key: match[2],

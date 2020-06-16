@@ -20,7 +20,7 @@ class AssetController extends BaseController
     /** @return string[] */
     private function getJavascript() : array
     {
-        return ['dist/translations.bundle.js'];
+        return ['dist/main.bundle.js'];
     }
 
     public function js() : Response

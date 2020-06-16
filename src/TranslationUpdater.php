@@ -8,7 +8,7 @@ use Antenna\InlineTranslations\Exceptions\InvalidTranslationFileException;
 use Antenna\InlineTranslations\Exceptions\TranslationUpdateException;
 use Antenna\InlineTranslations\Models\TranslationKey;
 use League\Flysystem\Filesystem;
-use function array_merge;
+use function array_replace_recursive;
 use function array_reverse;
 use function is_array;
 use function var_export;
@@ -28,7 +28,11 @@ class TranslationUpdater
     {
         $key              = TranslationKey::fromString($key);
         $file             = $key->getTranslationFileForLanguage($language);
-        $translationArray = require $this->basePath . '/' . $file;
+        $translationArray = [];
+
+        if (file_exists($this->basePath . '/' . $file)) {
+            $translationArray = require $this->basePath . '/' . $file;
+        }
 
         if (! is_array($translationArray)) {
             throw InvalidTranslationFileException::noArray($this->basePath . '/' . $file);
