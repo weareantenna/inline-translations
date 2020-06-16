@@ -13,7 +13,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>item</th>
+                                <th>key</th>
                                 <th v-for="locale in config['supported-locales']">{{ locale }}</th>
                             </tr>
                         </thead>
@@ -169,8 +169,7 @@
             scrollKeyIntoView(key) {
                 const element = document.querySelector(`var[data-translation-key="${key}"]`);
                 if (element) {
-                    element.scrollIntoView();
-                    window.scrollBy(0, -20);
+                    element.scrollIntoView({ block: 'center' });
                 }
             },
             scrollSelectListToKey(key) {

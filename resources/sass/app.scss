@@ -55,13 +55,21 @@ $black: #1a1919;
     .translations-list {
       width: 100%;
       height: 60%;
-      padding: 0.5rem 0;
+      padding-bottom: 0.5rem;
       overflow-y: scroll;
       border-bottom: 4px solid $light-gray;
       position: relative;
 
       table {
         border-collapse: collapse;
+      }
+
+      th {
+        line-height: 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: $light-gray;
       }
 
       th, td {
