@@ -77,6 +77,7 @@ $black: #1a1919;
 
         &:first-child {
           padding-left: 1rem;
+          word-break: break-word;
         }
 
         &:last-child {
@@ -148,10 +149,8 @@ $black: #1a1919;
     left: 0px;
     width: 20px;
     height: 100%;
-    background: $active;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij4KICA8dGV4dCBpZD0iXyIgZGF0YS1uYW1lPSLvjIMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEgMSkiIGZpbGw9IiMyMTI1MjkiIGZvbnQtc2l6ZT0iMTMiIGZvbnQtZmFtaWx5PSJGb250QXdlc29tZTVQcm8tU29saWQsICdGb250IEF3ZXNvbWUgNSBQcm8nIj48dHNwYW4geD0iMCIgeT0iMTEiPu+MgzwvdHNwYW4+PC90ZXh0Pgo8L3N2Zz4K");
+    background: url("data:image/svg+xml;utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='currentColor' d='M498 142l-46 46c-5 5-13 5-17 0L324 77c-5-5-5-12 0-17l46-46c19-19 49-19 68 0l60 60c19 19 19 49 0 68zm-214-42L22 362 0 484c-3 16 12 30 28 28l122-22 262-262c5-5 5-13 0-17L301 100c-4-5-12-5-17 0zM124 340c-5-6-5-14 0-20l154-154c6-5 14-5 20 0s5 14 0 20L144 340c-6 5-14 5-20 0zm-36 84h48v36l-64 12-32-31 12-65h36v48z'/></svg>") no-repeat;
     background-size: contain;
-    background-repeat: no-repeat;
     background-position-y: center;
   }
 }
