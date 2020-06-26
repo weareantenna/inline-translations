@@ -27,6 +27,9 @@ class AssetInjectionMiddleware
     public function handle(Request $request, Closure $next) : BaseResponse
     {
         $response = $next($request);
+        if ($request->getPathInfo() === '/' . config('inline-translations.routes.prefix') . '/list') {
+            return $response;
+        }
         if ($response instanceof Response) {
             $response = $this->injectTranslator($response);
         }
@@ -73,24 +76,24 @@ class AssetInjectionMiddleware
         $config                     = config('inline-translations');
         $config                     = array_merge($config, config('localization'));
         $config['current_language'] = App::getLocale();
-        $jsRoute                    = $this->getJsRouteFromManifest();
+        $jsRoute                    = self::getJsRouteFromManifest('main.js');
         $js                         = "<div id='antenna-inline-translator' data-config='" . json_encode($config) . "'><div id='antenna-inline-translator-app'></div></div>"
             . "<script type='text/javascript' src='{$jsRoute}'></script>\n";
 
         return substr($content, 0, $bodyPos) . $js . substr($content, $bodyPos);
     }
 
-    private function getJsRouteFromManifest() : ?string
+    public static function getJsRouteFromManifest(string $file) : ?string
     {
         $manifest = file_get_contents(__DIR__ . '/../../resources/dist/manifest.json');
         if ($manifest) {
             $config = json_decode($manifest, true);
 
-            if (strpos($config['main.js'], 'localhost') !== false) {
-                return $config['main.js'];
+            if (strpos($config[$file], 'localhost') !== false) {
+                return $config[$file];
             }
         }
 
-        return preg_replace('/https?:/', '', route('inline-translations.assets.js'));
+        return preg_replace('/https?:/', '', route('inline-translations.assets.js', ['file' => $file]));
     }
 }

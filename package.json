@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "html-entities-decode": "^1.0.1",
-    "vue": "^2.6.11"
+    "postcss-loader": "^3.0.0",
+    "vue": "^2.6.11",
+    "vuejs-smart-table": "0.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

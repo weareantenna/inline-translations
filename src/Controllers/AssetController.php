@@ -17,16 +17,18 @@ class AssetController extends BaseController
         return [];
     }
 
-    /** @return string[] */
-    private function getJavascript() : array
+    private function getJavascript(string $file) : string
     {
-        return ['dist/main.bundle.js'];
+        return [
+            'main.js' => 'dist/main.bundle.js',
+            'list.js' => 'dist/list.bundle.js'
+        ][$file];
     }
 
-    public function js() : Response
+    public function js(string $file) : Response
     {
         $response = new Response(
-            $this->dumpAssetsToString($this->getJavascript()),
+            $this->dumpAssetsToString([$this->getJavascript($file)]),
             200,
             ['Content-Type' => 'text/javascript']
         );
