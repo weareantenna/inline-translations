@@ -1,13 +1,7 @@
-$white: #FFF;
-$light-gray: #e6ebf0;
-$gray: #a8a9af;
-$primary: #06F9AE;
-$active: $primary;
-$black: #1a1919;
+@import '_variables';
 
 #antenna-inline-translator {
   @import "tabs";
-
 
   .translator-wrapper {
     display: flex;

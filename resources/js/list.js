@@ -2,7 +2,7 @@ import Vue from 'vue';
 import List from './components/List.vue';
 import SmartTable from 'vuejs-smart-table'
 
-require('../sass/app.scss');
+require('../sass/list.scss');
 
 Vue.use(SmartTable);
 new Vue({

@@ -1,0 +1,56 @@
+@import '_variables';
+
+html, body{
+  height:100%;
+  width:100%;
+  padding:0;
+  margin:0;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body > div, table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th {
+    background-color: $light-gray;
+    padding: 0.75rem;
+  }
+
+  td + td {
+    word-break: break-all;
+  }
+
+  td {
+    padding: 0.5rem 0.25rem;
+    border-bottom: 1px solid $light-gray;
+  }
+}
+
+.pagination {
+  list-style-type: none;
+  padding: 0;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+
+  .page-item {
+    display: inline-block;
+
+    .page-link {
+      display: block;
+      color: $black;
+      text-decoration: none;
+      padding: 0.25rem 0.5rem;
+      font-weight: bold;
+    }
+
+    &.active {
+      background-color: $primary;
+    }
+  }
+}
