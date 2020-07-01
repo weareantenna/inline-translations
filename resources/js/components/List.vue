@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input class="form-control" v-model="filters.search.value" placeholder="Search..." />
+        <input class="search-input" v-model="filters.search.value" placeholder="Search..." />
 
         <v-table
                 :data="allTranslations"
@@ -19,13 +19,17 @@
                 <tr v-for="translation in displayData" :key="translation.key">
                     <td>{{ translation.key }}</td>
                     <td v-for="locale in supportedLocales">
-                        <span @click="editKey(translation.key, locale)" v-if="!isEditing(translation, locale)">
-                            {{ translation[locale] }}
+                        <span @click="editKey(translation.key, locale)">
+                            {{ translation[locale] || '--- Not Translated ---' }}
                         </span>
-                        <span v-else>
-                            <input type="text" v-model="translation[locale]" />
-                            <a @click="saveUpdate(translation.key, locale, translation[locale])">submit</a>
-                        </span>
+                        <template v-if="isEditing(translation, locale)">
+                            <div class="edit-overlay" @click="stopEditing"></div>
+                            <div class="edit-popup">
+                                <textarea v-model="translation[locale]"></textarea>
+                                <a @click="saveUpdate(translation.key, locale, translation[locale])">submit</a>
+                            </div>
+                        </template>
+                        <span class="" v-if="isSaving(translation.key, locale)">saving</span>
                     </td>
                 </tr>
             </tbody>
@@ -50,7 +54,8 @@
             filters: { search: { value: '', keys: [] }},
             currentPage: 1,
             totalPages: 0,
-            submittedSuccessfully: false
+            submittedSuccessfully: false,
+            saving: {}
         }),
         mounted() {
             this.config = window.config;
@@ -68,6 +73,9 @@
                     'locale': locale
                 };
             },
+            stopEditing() {
+                this.editing = {};
+            },
             saveUpdate(key, locale, newValue) {
                 let postData = new FormData();
                 postData.append('key', key);
@@ -82,14 +90,13 @@
                             if (json.result) {
                                 this.submittedSuccessfully = true;
                                 fetch('/' + this.config.routes.prefix + '/trigger-event/update').then(() => {
-                                    window.setInterval(()=>{
+                                    window.setTimeout(()=>{
                                         this.submittedSuccessfully = false;
                                     }, 3000);
                                 });
                             }
                         });
-
-                this.editing = {};
+                this.stopEditing();
             },
             fetchAllTranslations() {
                 fetch('/' + this.config.routes.prefix + '/all')
