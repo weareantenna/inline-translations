@@ -19,17 +19,7 @@
                 <tr v-for="translation in displayData" :key="translation.key">
                     <td>{{ translation.key }}</td>
                     <td v-for="locale in supportedLocales">
-                        <span @click="editKey(translation.key, locale)">
-                            {{ translation[locale] || '--- Not Translated ---' }}
-                        </span>
-                        <template v-if="isEditing(translation, locale)">
-                            <div class="edit-overlay" @click="stopEditing"></div>
-                            <div class="edit-popup">
-                                <textarea v-model="translation[locale]"></textarea>
-                                <a @click="saveUpdate(translation.key, locale, translation[locale])">submit</a>
-                            </div>
-                        </template>
-                        <span class="" v-if="isSaving(translation.key, locale)">saving</span>
+                        <translation-cell :locale="locale" :translation="translation" :config="config" />
                     </td>
                 </tr>
             </tbody>
@@ -43,19 +33,19 @@
     </div>
 </template>
 <script>
+    import TranslationCell from "./parts/TranslationCell";
     export default {
         name: "List",
+        components: {TranslationCell},
         data: () => ({
             config: {},
             allTranslations: [],
             loaded: false,
             supportedLocales: [],
-            editing: {},
             filters: { search: { value: '', keys: [] }},
             currentPage: 1,
             totalPages: 0,
-            submittedSuccessfully: false,
-            saving: {}
+            submittedSuccessfully: false
         }),
         mounted() {
             this.config = window.config;
@@ -64,40 +54,6 @@
             this.filters.search.keys = ['key'].concat(this.supportedLocales);
         },
         methods: {
-            isEditing(translation, locale) {
-                return translation.key === this.editing.key && locale === this.editing.locale;
-            },
-            editKey(key, locale) {
-                this.editing = {
-                    'key': key,
-                    'locale': locale
-                };
-            },
-            stopEditing() {
-                this.editing = {};
-            },
-            saveUpdate(key, locale, newValue) {
-                let postData = new FormData();
-                postData.append('key', key);
-                postData.append('value', newValue);
-                postData.append('language', locale);
-                postData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                fetch('/' + this.config.routes.prefix + '/upsert', {
-                    method: 'POST',
-                    body: postData
-                }).then(response => response.json())
-                        .then(json => {
-                            if (json.result) {
-                                this.submittedSuccessfully = true;
-                                fetch('/' + this.config.routes.prefix + '/trigger-event/update').then(() => {
-                                    window.setTimeout(()=>{
-                                        this.submittedSuccessfully = false;
-                                    }, 3000);
-                                });
-                            }
-                        });
-                this.stopEditing();
-            },
             fetchAllTranslations() {
                 fetch('/' + this.config.routes.prefix + '/all')
                     .then(response => response.json())

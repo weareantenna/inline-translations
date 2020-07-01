@@ -39,7 +39,7 @@ body > div, table {
     border: 1px solid $light-gray;
     background-color: $white;
     box-shadow: 0px 0px 20px 0px #00000036;
-    z-index: 1;
+    z-index: 20;
 
     textarea {
       width: calc(100% - 2rem);
@@ -112,4 +112,23 @@ body > div, table {
   right: 0;
   top: 0;
   bottom: 0;
+  z-index: 10;
+}
+
+.translation-slot {
+  padding-right: 30px;
+}
+.loading-spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
 }
