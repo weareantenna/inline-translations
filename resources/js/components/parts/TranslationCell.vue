@@ -1,7 +1,8 @@
 <template>
     <div class="translation-slot">
         <span @click="editing = true">
-            {{ translation[locale] || '--- Not Translated ---' }}
+            <template v-if="translation[locale]"><span v-html="translation[locale]"></span></template>
+            <template v-else><span class="no-translation-slot"> ~ no translation ~ </span></template>
         </span>
         <template v-if="editing">
             <div class="edit-overlay" @click="editing = false"></div>
