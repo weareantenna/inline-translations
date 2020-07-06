@@ -198,9 +198,9 @@
                         if (json.result) {
                             this.submittedSuccessfully = true;
                             fetch('/' + this.config.routes.prefix + '/trigger-event/update').then(() => {
-                                window.setInterval(()=>{
+                                window.setTimeout(()=>{
                                     this.submittedSuccessfully = false;
-                                }, 3000);
+                                }, 1000);
                             });
                         }
                     });

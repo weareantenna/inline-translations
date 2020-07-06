@@ -6,7 +6,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
-        'main': './resources/js/index.js'
+        'main': './resources/js/index.js',
+        'list': './resources/js/list.js'
     },
     output: {
         filename: '[name].bundle.js',
@@ -20,7 +21,7 @@ module.exports = {
                 loader: 'vue-loader'
             },
             {
-                test: /\.s[ac]ss$/i,
+                test: /\.s[ac]ss|\.css$/i,
                 use: [
                     'style-loader',
                     'vue-style-loader',

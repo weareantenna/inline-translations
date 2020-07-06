@@ -1,3 +1,4 @@
 {
-  "main.js": "/main.bundle.js"
+  "list.js": "//localhost:8080/list.bundle.js",
+  "main.js": "//localhost:8080/main.bundle.js"
 }
