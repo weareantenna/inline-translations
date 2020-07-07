@@ -24,7 +24,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
-        ], 'vue-assets');
+        ], 'inline-translations-vue');
 
         if (! $this->isTranslationModeActive() || ! $this->allowedEnvironment()) {
             return;
@@ -46,6 +46,10 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/inline-translations.php', 'inline-translations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'inline-translations');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/inline-translations'),
+        ], 'inline-translations-views');
 
         $translationModeActive = $this->isTranslationModeActive();
         $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) : void {

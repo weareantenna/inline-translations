@@ -16,7 +16,7 @@ composer require antenna/inline-translations
 
 You must publish the configuration by running the command below. This will add the file `config/inline-translations.php` where you can configure the package. A Vue component will be published as well (`resources/assets/vendor/v-inline-translations/app.js`). You can use this as a Vue plugin for your vue instance. This is only needed if you use translations in your Vue components.
 ```
-php artisan vendor:publish --provider="Antenna\InlineTranslations\InlineTranslationsServiceProvider"
+php artisan vendor:publish --tag=inline-translations-vue
 ```
 
 (Optional) use the Vue plugin. the `methodName` parameter defines the translation function that you use within your Vue components. This function will be overwritten by this package (when translation mode is active):
