@@ -24,7 +24,7 @@ class TranslationUpdater
         $this->basePath   = $this->filesystem->getAdapter()->getPathPrefix(); //@phpstan-ignore-line
     }
 
-    public function updateTranslation(string $key, string $value, string $language) : bool
+    public function updateTranslation(string $key, ?string $value, string $language) : bool
     {
         $key              = TranslationKey::fromString($key);
         $file             = $key->getTranslationFileForLanguage($language);
@@ -49,7 +49,7 @@ class TranslationUpdater
      *
      * @return array<array|string>
      */
-    private function updateTranslationContent(array $content, TranslationKey $key, string $value) : array
+    private function updateTranslationContent(array $content, TranslationKey $key, ?string $value) : array
     {
         $subKeys        = $key->getKeyAsArray();
         $newTranslation = $value;

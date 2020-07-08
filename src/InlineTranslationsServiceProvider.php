@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations;
 
+use Antenna\InlineTranslations\Console\ImportCommand;
 use Antenna\InlineTranslations\Middleware\AssetInjectionMiddleware;
 use Antenna\InlineTranslations\Plugins\Laravel\LaravelTranslatorInterceptor;
 use Illuminate\Contracts\Http\Kernel;
@@ -11,6 +12,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use function base_path;
 use function resource_path;
 
@@ -18,13 +20,34 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 {
     public function boot() : void
     {
+        $this->app->singleton(ImportCommand::class, static function ($app) {
+            return new ImportCommand(
+                (new Finder())
+                    ->in($app->basePath())
+                    ->exclude('storage')
+                    ->exclude('vendor')
+                    ->exclude('node_modules')
+                    ->exclude('database')
+                    ->name('*.php')
+                    ->name('*.twig')
+                    ->name('*.vue'),
+                ['__t','$t','trans','translate'],
+                $app[TranslationFetcher::class],
+                $app[TranslationUpdater::class],
+                $app['config']['app.locale']
+            );
+        });
+        $this->commands([
+            ImportCommand::class,
+        ]);
+
         $this->publishes([
             __DIR__ . '/../config/inline-translations.php' => $this->app->configPath('inline-translations.php'),
         ]);
 
         $this->publishes([
             __DIR__ . '/Plugins/Vue/js' => resource_path('assets/vendor/v-inline-translations'),
-        ], 'vue-assets');
+        ], 'inline-translations-vue');
 
         if (! $this->isTranslationModeActive() || ! $this->allowedEnvironment()) {
             return;
@@ -46,6 +69,10 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/inline-translations.php', 'inline-translations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'inline-translations');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/inline-translations'),
+        ], 'inline-translations-views');
 
         $translationModeActive = $this->isTranslationModeActive();
         $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) : void {
