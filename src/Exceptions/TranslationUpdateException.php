@@ -15,4 +15,11 @@ class TranslationUpdateException extends Exception
             'We were unable to fill in translation key "' . $key->getKey() . '" with value "' . $value . '"'
         );
     }
+
+    public static function unableToRemoveKey(TranslationKey $key) : self
+    {
+        return new self(
+            'We were unable to remove translation key "' . $key->getKey() . '"'
+        );
+    }
 }
