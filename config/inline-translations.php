@@ -29,5 +29,24 @@ return [
      * Here you can define on which environments, translations are possible.
      * When the active environment is not in the array underneath, the tool will not be available.
      */
-    'translation_environments' => ['local']
+    'translation_environments' => ['local'],
+
+    /**
+     * Here you can define which functions are being used to translate keys.
+     * This is used in the artisan command that fetches new keys from your source files
+     */
+    'translation_functions' => [
+        'trans',
+        'trans_choice',
+        'Lang::get',
+        'Lang::choice',
+        'Lang::trans',
+        'Lang::transChoice',
+        '@lang',
+        '@choice',
+        '__',
+        '$trans.get',
+        '$t',
+        '__t'
+    ]
 ];

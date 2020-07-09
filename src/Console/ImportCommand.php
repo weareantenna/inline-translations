@@ -12,10 +12,10 @@ use Symfony\Component\Finder\Finder;
 class ImportCommand extends Command
 {
     /** @var string */
-    protected $name = 'translations:import';
+    protected $signature = 'translations:import {--save : Save changes in translation files }';
 
     /** @var string */
-    protected $description = 'Import translations from your source code files';
+    protected $description = 'Import translations from your source code files (this command defaults to a dry-run)';
 
     private Finder $finder;
     private array $translationFunctions;
@@ -56,7 +56,7 @@ class ImportCommand extends Command
         }
         $newKeys = $this->importNewKeys(array_unique($groupKeys));
 
-        $this->info("\n" . count($newKeys) . ' new keys found');
+        $this->info("\n" . count($newKeys) . ' new keys ' . ($this->option('save') ? 'saved' : 'found'));
     }
 
     private function importNewKeys(array $allKeys): array
@@ -66,8 +66,12 @@ class ImportCommand extends Command
         foreach ($allKeys as $key) {
             if (!in_array($key, $this->existingKeys, true)) {
                 $newKeys[] = $key;
-                $this->translationUpdater->updateTranslation($key, null, $this->mainLocale);
-                $this->line('[NEW] ' . $key);
+                if ($this->option('save')) {
+                    $this->translationUpdater->updateTranslation($key, null, $this->mainLocale);
+                    $this->line('[SAVED] ' . $key);
+                } else {
+                    $this->line('[NEW] ' . $key);
+                }
             }
         }
 

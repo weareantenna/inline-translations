@@ -31,7 +31,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
                     ->name('*.php')
                     ->name('*.twig')
                     ->name('*.vue'),
-                ['__t','$t','trans','translate'],
+                $app['config']['inline-translations.translation_functions'],
                 $app[TranslationFetcher::class],
                 $app[TranslationUpdater::class],
                 $app['config']['app.locale']
