@@ -20,6 +20,14 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 {
     public function boot() : void
     {
+        $filesystem = $this->getFilesystem();
+        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem) : TranslationFetcher {
+            return new TranslationFetcher($filesystem);
+        });
+        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem) : TranslationUpdater {
+            return new TranslationUpdater($filesystem);
+        });
+
         $this->app->singleton(ImportCommand::class, static function ($app) {
             return new ImportCommand(
                 (new Finder())
@@ -79,14 +87,6 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             $view->with([
                 'enabled' => (int) $translationModeActive,
             ]);
-        });
-
-        $filesystem = $this->getFilesystem();
-        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem) : TranslationFetcher {
-            return new TranslationFetcher($filesystem);
-        });
-        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem) : TranslationUpdater {
-            return new TranslationUpdater($filesystem);
         });
 
         if (! $translationModeActive) {
