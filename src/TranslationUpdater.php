@@ -28,8 +28,59 @@ class TranslationUpdater
     {
         $key              = TranslationKey::fromString($key);
         $file             = $key->getTranslationFileForLanguage($language);
-        $translationArray = [];
+        $translationArray = $this->initializeTranslationFileForFile($file);
+        $translationArray = $this->updateTranslationContent($translationArray, $key, $value);
 
+        $fileContent      = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
+
+        return $this->filesystem->put($file, $fileContent);
+    }
+
+    public function removeTranslation(string $key, string $language) : bool
+    {
+        $key              = TranslationKey::fromString($key);
+        $file             = $key->getTranslationFileForLanguage($language);
+        $translationArray = $this->initializeTranslationFileForFile($file);
+
+
+        $subKeys        = $key->getKeyAsArray();
+        $currentValue = &$translationArray;
+        foreach ($subKeys as $i => $subKey) {
+            if (!isset($currentValue[$subKey])) {
+                throw TranslationUpdateException::unableToRemoveKey($key);
+            }
+
+            if ($i === count($subKeys) - 1) {
+                unset($currentValue[$subKey]);
+                continue;
+            }
+
+            $currentValue = &$currentValue[$subKey];
+        }
+
+        $translationArray = $this->recursiveFilter($translationArray);
+        $fileContent      = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
+        return $this->filesystem->put($file, $fileContent);
+    }
+
+    /**
+     * @param mixed[] $input
+     * @return mixed[]
+     */
+    private function recursiveFilter(array $input)
+    {
+        foreach ($input as &$value) {
+            if (is_array($value)) {
+                $value = $this->recursiveFilter($value);
+            }
+        }
+        return array_filter($input);
+    }
+
+    /** @return array<int|string,array<string, string>> */
+    private function initializeTranslationFileForFile(string $file) : array
+    {
+        $translationArray = [];
         if (file_exists($this->basePath . '/' . $file)) {
             $translationArray = require $this->basePath . '/' . $file;
         }
@@ -38,10 +89,7 @@ class TranslationUpdater
             throw InvalidTranslationFileException::noArray($this->basePath . '/' . $file);
         }
 
-        $translationArray = $this->updateTranslationContent($translationArray, $key, $value);
-        $fileContent      = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
-
-        return $this->filesystem->put($file, $fileContent);
+        return $translationArray;
     }
 
     /**

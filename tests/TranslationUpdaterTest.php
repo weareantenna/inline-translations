@@ -34,4 +34,10 @@ class TranslationUpdaterTest extends TestCase
         $result = $this->updater->updateTranslation('app.key', 'value', 'nl');
         $this->assertTrue($result);
     }
+
+    public function testDeletingTranslation() : void
+    {
+        $result = $this->updater->removeTranslation('app.holidays.january.newyear', 'nl');
+        $this->assertTrue($result);
+    }
 }
