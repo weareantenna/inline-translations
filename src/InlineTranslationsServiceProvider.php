@@ -13,7 +13,6 @@ use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use function base_path;
 use function resource_path;
 
 final class InlineTranslationsServiceProvider extends ServiceProvider
@@ -108,7 +107,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
 
     private function allowedEnvironment() : bool
     {
-        return $this->app->environment($this->app['config']['inline-translations.translation_environments']);
+        return (bool) $this->app->environment($this->app['config']['inline-translations.translation_environments']);
     }
 
     protected function getFilesystem() : Filesystem

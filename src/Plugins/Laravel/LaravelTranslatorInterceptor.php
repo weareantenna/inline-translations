@@ -10,7 +10,10 @@ use function is_string;
 
 class LaravelTranslatorInterceptor extends Translator
 {
-    /** @phpstan-ignore-next-line */
+    /**
+     * @param string[] $replace
+     * @return string
+     */
     public function get($key, array $replace = [], $locale = null, $fallback = true)
     {
         $translation = parent::get($key, $replace, $locale, $fallback);

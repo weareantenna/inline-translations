@@ -30,6 +30,7 @@ class AssetInjectionMiddleware
         if ($request->getPathInfo() === '/' . config('inline-translations.routes.prefix') . '/list') {
             return $response;
         }
+
         if ($response instanceof Response) {
             $response = $this->injectTranslator($response);
         }

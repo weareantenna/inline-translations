@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations\Controllers;
 
 use Antenna\InlineTranslations\Events\TranslationUpdated;
-use Antenna\InlineTranslations\Models\TranslationKey;
 use Antenna\InlineTranslations\Requests\TranslationRequest;
 use Antenna\InlineTranslations\TranslationFetcher;
 use Antenna\InlineTranslations\TranslationUpdater;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Artisan;
+use function opcache_reset;
 
 class ApiController extends BaseController
 {

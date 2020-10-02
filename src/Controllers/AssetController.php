@@ -21,7 +21,7 @@ class AssetController extends BaseController
     {
         return [
             'main.js' => 'dist/main.bundle.js',
-            'list.js' => 'dist/list.bundle.js'
+            'list.js' => 'dist/list.bundle.js',
         ][$file];
     }
 
