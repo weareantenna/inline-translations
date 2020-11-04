@@ -8,8 +8,11 @@ use Antenna\InlineTranslations\Exceptions\InvalidTranslationFileException;
 use Antenna\InlineTranslations\Exceptions\TranslationUpdateException;
 use Antenna\InlineTranslations\Models\TranslationKey;
 use League\Flysystem\Filesystem;
+use function array_filter;
 use function array_replace_recursive;
 use function array_reverse;
+use function count;
+use function file_exists;
 use function is_array;
 use function var_export;
 
@@ -31,7 +34,7 @@ class TranslationUpdater
         $translationArray = $this->initializeTranslationFileForFile($file);
         $translationArray = $this->updateTranslationContent($translationArray, $key, $value);
 
-        $fileContent      = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
+        $fileContent = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
 
         return $this->filesystem->put($file, $fileContent);
     }
@@ -42,11 +45,10 @@ class TranslationUpdater
         $file             = $key->getTranslationFileForLanguage($language);
         $translationArray = $this->initializeTranslationFileForFile($file);
 
-
-        $subKeys        = $key->getKeyAsArray();
+        $subKeys      = $key->getKeyAsArray();
         $currentValue = &$translationArray;
         foreach ($subKeys as $i => $subKey) {
-            if (!isset($currentValue[$subKey])) {
+            if (is_string($currentValue) || ! isset($currentValue[$subKey])) {
                 throw TranslationUpdateException::unableToRemoveKey($key);
             }
 
@@ -60,24 +62,29 @@ class TranslationUpdater
 
         $translationArray = $this->recursiveFilter($translationArray);
         $fileContent      = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
+
         return $this->filesystem->put($file, $fileContent);
     }
 
     /**
      * @param mixed[] $input
+     *
      * @return mixed[]
      */
-    private function recursiveFilter(array $input)
+    private function recursiveFilter(array $input) : array
     {
         foreach ($input as &$value) {
-            if (is_array($value)) {
-                $value = $this->recursiveFilter($value);
+            if (! is_array($value)) {
+                continue;
             }
+
+            $value = $this->recursiveFilter($value);
         }
+
         return array_filter($input);
     }
 
-    /** @return array<int|string,array<string, string>> */
+    /** @return array<string,array<string, string>> */
     private function initializeTranslationFileForFile(string $file) : array
     {
         $translationArray = [];
@@ -106,7 +113,7 @@ class TranslationUpdater
         }
 
         if (! is_array($newTranslation)) {
-            throw TranslationUpdateException::unableToMergeTranslations($key, $value);
+            throw TranslationUpdateException::unableToMergeTranslations($key, $value ?? '');
         }
 
         return array_replace_recursive($content, $newTranslation);

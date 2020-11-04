@@ -1,4 +1,4 @@
-const VInlineTranslations = {
+const VInlineTranslations                        = {
     install(Vue, options) {
         Vue.prototype.$parentTranslationFunction = Vue.options.methods[options.methodName];
 
