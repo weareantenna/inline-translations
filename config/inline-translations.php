@@ -16,6 +16,11 @@ return [
         'middleware' => null,
     ],
     /**
+     * This is an array of the locales that your application needs to support.
+     * This list is used to define the possible translations
+     */
+    'supported-locales' => ['en'],
+    /**
      * The location where your translations are found, is defined in this parameter.
      * Laravel by default stores this in resources/lang
      */
