@@ -14,6 +14,11 @@ return [
          * It might be sensible to add some kind of authentication in this middleware.
          */
         'middleware' => null,
+        /**
+         * Underneath you can define the redirect url to which you want to redirect,
+         * once translation mode has been (de)activated
+         */
+        'redirect_url' => '/',
     ],
     /**
      * This is an array of the locales that your application needs to support.

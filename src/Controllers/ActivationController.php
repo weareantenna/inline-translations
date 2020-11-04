@@ -12,11 +12,13 @@ class ActivationController extends BaseController
 {
     public function enable() : RedirectResponse
     {
-        return (new RedirectResponse('/'))->withCookie('inline-translations-active', true);
+        return (new RedirectResponse(config('inline-translations.routes.redirect_url')))
+            ->withCookie('inline-translations-active', true);
     }
 
     public function disable() : RedirectResponse
     {
-        return (new RedirectResponse('/'))->withCookie(Cookie::forget('inline-translations-active'));
+        return (new RedirectResponse(config('inline-translations.routes.redirect_url')))
+            ->withCookie(Cookie::forget('inline-translations-active'));
     }
 }
