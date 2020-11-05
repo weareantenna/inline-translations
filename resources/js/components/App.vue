@@ -13,14 +13,21 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>key</th>
+                                <th @click="sorting = !sorting" class="sortable">
+                                    <span v-if="sorting">
+                                        <svg viewBox="-32 0 426 427" xmlns="http://www.w3.org/2000/svg"><path d="M91 427c-9 0-16-7-16-16V16a16 16 0 0132 0v395c0 9-7 16-16 16zm0 0"/><path d="M91 427c-4 0-8-2-11-5L5 347a16 16 0 0123-22l63 63 63-63a16 16 0 0123 22l-75 75c-3 3-7 5-11 5zm0 0M347 427h-75a16 16 0 01-14-24l62-115h-48a16 16 0 010-32h75a16 16 0 0114 24l-62 115h48a16 16 0 010 32zm0 0M347 171c-9 0-16-8-16-16V53a21 21 0 00-43 0v102a16 16 0 01-32 0V53a53 53 0 01107 0v102c0 9-7 16-16 16zm0 0"/><path d="M347 112h-75a16 16 0 010-32h75a16 16 0 010 32zm0 0"/></svg>
+                                    </span>
+                                    <span v-else>
+                                    <svg viewBox="-21 0 426 427" xmlns="http://www.w3.org/2000/svg"><path d="M91 427c-9 0-16-7-16-16V16a16 16 0 0132 0v395c0 9-7 16-16 16zm0 0"/><path d="M91 427c-4 0-8-2-11-5L5 347a16 16 0 0123-22l63 63 63-63a16 16 0 0123 22l-75 75c-3 3-7 5-11 5zm0 0M331 171c-9 0-16-8-16-16V32h-21a16 16 0 010-32h37c9 0 16 7 16 16v139c0 9-7 16-16 16zm0 0M347 427h-53a16 16 0 010-32h53c3 0 5-3 5-6v-26h-37c-21 0-37-17-37-38v-32c0-20 16-37 37-37h32c21 0 37 17 37 37v96c0 21-16 38-37 38zm-32-139c-3 0-5 2-5 5v32c0 3 2 6 5 6h37v-38c0-3-2-5-5-5zm0 0"/><path d="M368 171h-74a16 16 0 010-32h74a16 16 0 010 32zm0 0"/></svg>
+                                </span> key
+                                </th>
                                 <th v-for="locale in config['supported-locales']">{{ locale }}</th>
                             </tr>
                         </thead>
                         <tbody name="key" class="select-list">
                             <tr
                                 :key="translation.key"
-                                v-for="translation in pageTranslations"
+                                v-for="translation in sortedPageTranslations"
                                 @click="scrollKeyIntoView(translation.key); activeTranslation = translation"
                                 :class="{'active': activeTranslation === translation}"
                                 class="select-list--key"
@@ -82,7 +89,8 @@
             activeTranslationValues: [],
             observerConfig: {childList: true, subtree: true},
             show: true,
-            submittedSuccessfully: false
+            submittedSuccessfully: false,
+            sorting: false
         }),
         mounted() {
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
@@ -93,6 +101,24 @@
         computed: {
             activeLanguage() {
                 return this.config.current_language;
+            },
+            sortedPageTranslations() {
+                if (this.sorting) {
+                    return this.sortedAlphabeticPageTranslations;
+                }
+
+                return this.pageTranslations;
+            },
+            sortedAlphabeticPageTranslations() {
+                function compare(a, b) {
+                    if (a.key < b.key)
+                        return -1;
+                    if (a.key > b.key)
+                        return 1;
+                    return 0;
+                }
+
+                return [...this.pageTranslations].sort(compare);
             }
         },
         watch: {
