@@ -3,6 +3,18 @@
 #antenna-inline-translator {
   @import "tabs";
 
+  .sortable {
+    cursor: pointer;
+
+    span {
+      padding-right: 10px;
+    }
+
+    svg {
+      width: 16px;
+    }
+  }
+
   .translator-wrapper {
     display: flex;
     position: fixed;
