@@ -19,6 +19,18 @@ body > div, table {
   th {
     background-color: $light-gray;
     padding: 0.75rem;
+    position: relative;
+    padding-bottom: 2rem;
+
+    .empty-show {
+      font-weight: normal !important;
+      color: transparentize($black, 0.5);
+      font-size: 0.8rem;
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
   }
 
   td + td {
@@ -79,6 +91,26 @@ body > div, table {
   &:focus {
     outline: 0;
     border-top: 2px solid $primary;
+  }
+}
+.header {
+  position: relative;
+}
+
+.refresh-button {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  height: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    color: $primary;
+  }
+
+  svg {
+    height: 1rem;
+    width: 1rem;
   }
 }
 

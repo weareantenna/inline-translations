@@ -53,6 +53,8 @@
                         }
                     });
 
+
+                this.$emit('saved');
                 this.editing = false;
             },
         }
