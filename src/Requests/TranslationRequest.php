@@ -13,7 +13,6 @@ class TranslationRequest extends FormRequest
     {
         return [
             'key' => 'required',
-            'value' => 'required',
             'language' => 'required',
         ];
     }
