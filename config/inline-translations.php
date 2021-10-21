@@ -13,7 +13,7 @@ return [
          * Underneath you can define middleware that will be added to all routes of this package.
          * It might be sensible to add some kind of authentication in this middleware.
          */
-        'middleware' => null,
+        'middleware' => ['web'],
         /**
          * Underneath you can define the redirect url to which you want to redirect,
          * once translation mode has been (de)activated
