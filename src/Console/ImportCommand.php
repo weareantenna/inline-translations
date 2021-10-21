@@ -40,13 +40,13 @@ class ImportCommand extends Command
      */
     public function __construct(
         Finder $finder,
-        array $translationFunctions,
+        ?array $translationFunctions,
         TranslationFetcher $translationFetcher,
         TranslationUpdater $translationUpdater,
         string $mainLocale
     ) {
         $this->finder               = $finder;
-        $this->translationFunctions = $translationFunctions;
+        $this->translationFunctions = $translationFunctions ?? [];
         $this->translationUpdater   = $translationUpdater;
         $this->existingKeys         = array_keys($translationFetcher->fetchByLanguage($mainLocale));
         $this->mainLocale           = $mainLocale;

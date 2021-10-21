@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations;
 
 use League\Flysystem\Filesystem;
+use League\Flysystem\NotSupportedException;
 use function array_key_exists;
 use function array_merge;
 use function assert;
@@ -106,7 +107,11 @@ class TranslationFetcher
 
         $translations = [];
         foreach ($vendorFolders as $vendorFolder) {
-            $vendorTranslations = $this->filesystem->listContents($vendorFolder['path']);
+            try {
+                $vendorTranslations = $this->filesystem->listContents($vendorFolder['path']);
+            } catch (NotSupportedException $e) {
+                $vendorTranslations = [];
+            }
             foreach ($vendorTranslations as $vendorTranslation) {
                 if ($vendorTranslation['basename'] !== $language) {
                     continue;
