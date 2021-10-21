@@ -16,7 +16,7 @@ composer require antenna/inline-translations
 
 You must publish the configuration by running the command below. This will add the file `config/inline-translations.php` where you can configure the package. A Vue component will be published as well (`resources/assets/vendor/v-inline-translations/app.js`). You can use this as a Vue plugin for your vue instance. This is only needed if you use translations in your Vue components.
 ```
-php artisan vendor:publish --tag=inline-translations-vue
+php artisan vendor:publish --tag=inline-translations
 ```
 
 (Optional) use the Vue plugin. the `methodName` parameter defines the translation function that you use within your Vue components. This function will be overwritten by this package (when translation mode is active):
@@ -27,6 +27,8 @@ new Vue({
   ...
 });
 ```
+
+Don't forget to configure your supported languages in the configuration that was deployed (see underneath). By default this is configured to support one single language (English).
 
 ## Configuration
 This package has some configuration options. All configuration parameters have default values, so this package should work out of the box. Underneath you'll find the default configuration with explanation for all available parameters
@@ -85,8 +87,12 @@ We have tried to not only simplify the technical functionality of translation bu
 translations.
 
 This has been done by an inline "widget" that can be collapsed. If open, this visualizes the keys and (already defined) translations that can be found
-on the page for every language that has been configured (see `config/app.php`) within the application.
+on the page for every language that has been configured within the application.
 
+In order to use the inline translation tool, you should surf to `/inline-translations/enable`, this will enable the tool. When you surf around your tool, you'll be able to do the translations via our interface.
+A button can be configured to enable / disable the tool if wanted.
+
+In order to close the tool, surf to `/inline-translations/disable`
 
 ## Todo
 
