@@ -10,6 +10,7 @@
 <body>
     <div id="antenna-inline-translator-list"></div>
     <script type="text/javascript">
+        window.translationModeBaseUrl= "{{ env('APP_URL') }}";
         window.config = @json($config);
     </script>
     <script src="{{ $js }}" defer></script>
