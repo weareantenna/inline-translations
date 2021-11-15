@@ -99,6 +99,9 @@
             this.addInlineClickEventListener();
         },
         computed: {
+            basePath() {
+                return window.translationModeBaseUrl || '';
+            },
             activeLanguage() {
                 return this.config.current_language;
             },
@@ -158,7 +161,7 @@
                 observer.observe(document, this.observerConfig);
             },
             fetchAllTranslations() {
-                fetch('/' + this.config.routes.prefix + '/all')
+                fetch(this.basePath + '/' + this.config.routes.prefix + '/all')
                     .then(response => response.json())
                     .then(json => {
                         this.allTranslations = json;
@@ -216,14 +219,14 @@
                 postData.append('value', value);
                 postData.append('language', language);
                 postData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                fetch('/' + this.config.routes.prefix + '/upsert', {
+                fetch(this.basePath + '/' + this.config.routes.prefix + '/upsert', {
                     method: 'POST',
                     body: postData
                 }).then(response => response.json())
                     .then(json => {
                         if (json.result) {
                             this.submittedSuccessfully = true;
-                            fetch('/' + this.config.routes.prefix + '/trigger-event/update').then(() => {
+                            fetch(this.basePath + '/' + this.config.routes.prefix + '/trigger-event/update').then(() => {
                                 window.setTimeout(()=>{
                                     this.submittedSuccessfully = false;
                                 }, 1000);
