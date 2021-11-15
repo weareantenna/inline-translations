@@ -62,7 +62,7 @@ class AssetInjectionMiddleware
             return $content;
         }
 
-        $js = "<script type='text/javascript'>window.translationModeActive=true;</script>\n";
+        $js = "<script type='text/javascript'>window.translationModeActive=true; window.translationModeBaseUrl=".env('APP_URL').";</script>\n";
 
         return substr($content, 0, $headPos) . $js . substr($content, $headPos);
     }
