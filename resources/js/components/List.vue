@@ -82,6 +82,9 @@
             this.filters.search.keys = ['key'].concat(this.supportedLocales.map(v => '_old_' + v));
         },
         computed: {
+          basePath() {
+            return window.translationModeBaseUrl || '';
+          },
           filteredTranslations() {
             if (this.onlyEmpty.length === 0) {
               return this.allTranslations;
@@ -139,7 +142,7 @@
               }
             },
             fetchAllTranslations() {
-                fetch('/' + this.config.routes.prefix + '/all')
+                fetch(this.basePath + '/' + this.config.routes.prefix + '/all')
                     .then(response => response.json())
                     .then(json => {
                         this.allTranslations = this.completeTranslations(json);

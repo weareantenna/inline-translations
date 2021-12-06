@@ -29,6 +29,11 @@
             editing: false,
             saving: false
         }),
+        computed: {
+            basePath() {
+                return window.translationModeBaseUrl || '';
+            },
+        },
         methods: {
             saveUpdate(key, locale, newValue) {
                 this.saving = true;
@@ -37,7 +42,7 @@
                 postData.append('value', newValue);
                 postData.append('language', locale);
                 postData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-                fetch('/' + this.config.routes.prefix + '/upsert', {
+                fetch(this.basePath + '/' + this.config.routes.prefix + '/upsert', {
                     method: 'POST',
                     body: postData
                 }).then(response => response.json())

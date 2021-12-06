@@ -18,7 +18,7 @@ return [
          * Underneath you can define the redirect url to which you want to redirect,
          * once translation mode has been (de)activated
          */
-        'redirect_url' => '/',
+        'redirect_url' => env('APP_URL'),
     ],
     /**
      * This is an array of the locales that your application needs to support.
