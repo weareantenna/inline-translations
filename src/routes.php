@@ -10,6 +10,8 @@ use Antenna\InlineTranslations\Controllers\ListController;
 $config = array_merge(config('inline-translations.routes'), ['namespace' => 'Antenna\InlineTranslations']);
 Route::group($config, static function ($router) : void {
     $router->get('list', [ListController::class, 'index']);
+    $router->get('export', [ListController::class, 'export'])->name('inline-translations.export-csv');
+    $router->post('import', [ListController::class, 'import']);
     $router->get('enable', [ActivationController::class, 'enable']);
     $router->get('disable', [ActivationController::class, 'disable']);
 

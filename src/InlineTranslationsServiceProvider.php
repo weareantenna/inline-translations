@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations;
 
+use Antenna\InlineTranslations\Console\GenerateCsvCommand;
 use Antenna\InlineTranslations\Console\ImportCommand;
 use Antenna\InlineTranslations\Middleware\AssetInjectionMiddleware;
 use Antenna\InlineTranslations\Plugins\Laravel\LaravelTranslatorInterceptor;

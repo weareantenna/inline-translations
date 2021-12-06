@@ -40,6 +40,17 @@
             :totalPages="totalPages"
             :maxPageLinks="10"
         />
+
+      <div class="fullscreen-loader" v-if="!loaded">
+        <span class="loading-spinner">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><circle cx="50" cy="50" fill="none" stroke="#06f9ae" stroke-width="15" r="15" stroke-dasharray="70.68583470577033 25.561944901923447" transform="rotate(221.97 50 50)"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"/></circle></svg>
+        </span>
+      </div>
+      <div class="export-import-wrapper">
+        <input name="translations" @change="filePicked" ref="translationCsvPick" type="file" hidden>
+        <button class="button" @click="pickFile">Import</button>
+        <a class="button" :href="config.exportUrl">Export</a>
+      </div>
     </div>
 </template>
 <script>
@@ -89,6 +100,36 @@
           }
         },
         methods: {
+            pickFile() {
+              this.$refs.translationCsvPick.click();
+            },
+            filePicked(e) {
+              this.loaded = false;
+              const file = e.target.files[0];
+              const formData = new FormData();
+              formData.append('translations', file);
+
+              fetch('/' + this.config.routes.prefix + '/import', {
+                method: 'POST',
+                body: formData
+              })
+                .then(response => {
+                  this.$refs.translationCsvPick.value = '';
+                  return response;
+                })
+                .then(response => response.json())
+                .then(json => {
+                  if (json.result !== 'success') {
+                    console.error(json);
+                  }
+
+                  setTimeout(() => {
+                        this.fetchAllTranslations();
+                      }
+                      ,3000);
+                });
+
+            },
             changeEmpty(locale) {
               const index = this.onlyEmpty.indexOf(locale);
               if (index > -1) {

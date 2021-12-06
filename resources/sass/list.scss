@@ -79,6 +79,46 @@ body > div, table {
   }
 }
 
+.export-import-wrapper {
+  text-align: right;
+  padding: 0 1rem;
+
+  .button {
+    appearance: none;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    border: 1px $primary solid;
+    background-color: $active;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    margin: 0 0.25rem;
+    font-weight: bold;
+    color: $black;
+
+    &:hover {
+      background-color: $white;
+    }
+  }
+}
+
+.fullscreen-loader {
+  position: fixed;
+  z-index: 100;
+  background-color: transparentize($white, 0.1);
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  .loading-spinner {
+    right: 50%;
+    width: 140px;
+    height: 140px;
+  }
+}
+
 .search-input {
   width: calc(100% - 2rem);
   padding: 1rem;
