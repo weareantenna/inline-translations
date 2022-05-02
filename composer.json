@@ -26,7 +26,7 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5",
         "phpunit/phpunit": "^9.1",
-        "doctrine/coding-standard": "^7.0 || ^8.0",
+        "doctrine/coding-standard": "^7.0 || ^8.0 || ^9.0",
         "phpstan/phpstan": "^0.12.25",
         "illuminate/http": "^7.10 || ^8.0",
         "nunomaduro/larastan": "^0.6.4",
