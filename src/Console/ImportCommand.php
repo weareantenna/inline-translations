@@ -8,6 +8,7 @@ use Antenna\InlineTranslations\TranslationFetcher;
 use Antenna\InlineTranslations\TranslationUpdater;
 use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
+
 use function array_keys;
 use function array_unique;
 use function count;
@@ -17,10 +18,8 @@ use function preg_match_all;
 
 class ImportCommand extends Command
 {
-    /** @var string */
     protected $signature = 'translations:import {--save : Save changes in translation files }';
 
-    /** @var string */
     protected $description = 'Import translations from your source code files (this command defaults to a dry-run)';
 
     private Finder $finder;
@@ -53,7 +52,7 @@ class ImportCommand extends Command
         parent::__construct();
     }
 
-    public function handle() : void
+    public function handle(): void
     {
         $this->info('Scanning files for new translation keys' . "\n");
         // See https://regex101.com/r/WEJqdL/6
@@ -79,9 +78,10 @@ class ImportCommand extends Command
 
     /**
      * @param string[] $allKeys
+     *
      * @return string[]
      */
-    private function importNewKeys(array $allKeys) : array
+    private function importNewKeys(array $allKeys): array
     {
         $newKeys = [];
 

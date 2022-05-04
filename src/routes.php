@@ -7,8 +7,9 @@ use Antenna\InlineTranslations\Controllers\ApiController;
 use Antenna\InlineTranslations\Controllers\AssetController;
 use Antenna\InlineTranslations\Controllers\ListController;
 
+/** @phpstan-ignore-next-line */
 $config = array_merge(config('inline-translations.routes'), ['namespace' => 'Antenna\InlineTranslations']);
-Route::group($config, static function ($router) : void {
+Route::group($config, static function ($router): void {
     $router->get('list', [ListController::class, 'index']);
     $router->get('export', [ListController::class, 'export'])->name('inline-translations.export-csv');
     $router->post('import', [ListController::class, 'import']);

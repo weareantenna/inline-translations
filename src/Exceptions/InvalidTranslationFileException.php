@@ -8,7 +8,7 @@ use Exception;
 
 class InvalidTranslationFileException extends Exception
 {
-    public static function noArray(string $file) : self
+    public static function noArray(string $file): self
     {
         return new self('The translation file located in "' . $file . '" is invalid, it does not contain an array');
     }

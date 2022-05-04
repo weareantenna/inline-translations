@@ -9,8 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response as BaseResponse;
-use function array_merge;
+
 use function config;
+use function env;
 use function file_get_contents;
 use function is_int;
 use function is_string;
@@ -24,7 +25,7 @@ use function substr;
 
 class AssetInjectionMiddleware
 {
-    public function handle(Request $request, Closure $next) : BaseResponse
+    public function handle(Request $request, Closure $next): BaseResponse
     {
         $response = $next($request);
         if ($request->getPathInfo() === '/' . config('inline-translations.routes.prefix') . '/list') {
@@ -38,7 +39,7 @@ class AssetInjectionMiddleware
         return $response;
     }
 
-    private function injectTranslator(Response $response) : Response
+    private function injectTranslator(Response $response): Response
     {
         $content = $response->getContent();
         if (! is_string($content)) {
@@ -55,25 +56,26 @@ class AssetInjectionMiddleware
         return $response;
     }
 
-    private function addJsBeforeClosingHeadTag(string $content) : string
+    private function addJsBeforeClosingHeadTag(string $content): string
     {
         $headPos = strripos($content, '</head>');
         if (! is_int($headPos)) {
             return $content;
         }
 
-        $js = "<script type='text/javascript'>window.translationModeActive=true; window.translationModeBaseUrl='".env('APP_URL')."';</script>\n";
+        $js = "<script type='text/javascript'>window.translationModeActive=true; window.translationModeBaseUrl='" . env('APP_URL') . "';</script>\n";
 
         return substr($content, 0, $headPos) . $js . substr($content, $headPos);
     }
 
-    private function addJsBeforeClosingBodyTag(string $content) : string
+    private function addJsBeforeClosingBodyTag(string $content): string
     {
         $bodyPos = strripos($content, '</body>');
         if (! is_int($bodyPos)) {
             return $content;
         }
 
+        /** @var array<string, mixed> $config */
         $config                     = config('inline-translations');
         $config['current_language'] = App::getLocale();
         $jsRoute                    = self::getJsRouteFromManifest('main.js');
@@ -83,10 +85,11 @@ class AssetInjectionMiddleware
         return substr($content, 0, $bodyPos) . $js . substr($content, $bodyPos);
     }
 
-    public static function getJsRouteFromManifest(string $file) : ?string
+    public static function getJsRouteFromManifest(string $file): ?string
     {
         $manifest = file_get_contents(__DIR__ . '/../../resources/dist/manifest.json');
         if ($manifest) {
+            /** @var array<string, string> $config */
             $config = json_decode($manifest, true);
 
             if (strpos($config[$file], 'localhost') !== false) {

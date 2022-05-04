@@ -8,12 +8,14 @@ use Antenna\InlineTranslations\Exceptions\InvalidTranslationFileException;
 use Antenna\InlineTranslations\Exceptions\TranslationUpdateException;
 use Antenna\InlineTranslations\Models\TranslationKey;
 use League\Flysystem\Filesystem;
+
 use function array_filter;
 use function array_replace_recursive;
 use function array_reverse;
 use function count;
 use function file_exists;
 use function is_array;
+use function is_string;
 use function var_export;
 
 class TranslationUpdater
@@ -21,13 +23,13 @@ class TranslationUpdater
     private Filesystem $filesystem;
     private string $basePath;
 
-    public function __construct(Filesystem $filesystem)
+    public function __construct(Filesystem $filesystem, string $basePath)
     {
         $this->filesystem = $filesystem;
-        $this->basePath   = $this->filesystem->getAdapter()->getPathPrefix(); //@phpstan-ignore-line
+        $this->basePath   = $basePath;
     }
 
-    public function updateTranslation(string $key, ?string $value, string $language) : bool
+    public function updateTranslation(string $key, ?string $value, string $language): bool
     {
         $key              = TranslationKey::fromString($key);
         $file             = $key->getTranslationFileForLanguage($language);
@@ -36,10 +38,12 @@ class TranslationUpdater
 
         $fileContent = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
 
-        return $this->filesystem->put($file, $fileContent);
+        $this->filesystem->write($file, $fileContent);
+
+        return true;
     }
 
-    public function removeTranslation(string $key, string $language) : bool
+    public function removeTranslation(string $key, string $language): bool
     {
         $key              = TranslationKey::fromString($key);
         $file             = $key->getTranslationFileForLanguage($language);
@@ -63,7 +67,9 @@ class TranslationUpdater
         $translationArray = $this->recursiveFilter($translationArray);
         $fileContent      = "<?php\n\nreturn " . var_export($translationArray, true) . ';';
 
-        return $this->filesystem->put($file, $fileContent);
+        $this->filesystem->write($file, $fileContent);
+
+        return true;
     }
 
     /**
@@ -71,7 +77,7 @@ class TranslationUpdater
      *
      * @return mixed[]
      */
-    private function recursiveFilter(array $input) : array
+    private function recursiveFilter(array $input): array
     {
         foreach ($input as &$value) {
             if (! is_array($value)) {
@@ -85,7 +91,7 @@ class TranslationUpdater
     }
 
     /** @return array<string,array<string, string>> */
-    private function initializeTranslationFileForFile(string $file) : array
+    private function initializeTranslationFileForFile(string $file): array
     {
         $translationArray = [];
         if (file_exists($this->basePath . '/' . $file)) {
@@ -100,11 +106,11 @@ class TranslationUpdater
     }
 
     /**
-     * @param array<array|string> $content
+     * @param array<array<string, mixed>|string> $content
      *
-     * @return array<array|string>
+     * @return array<array<string, mixed>|string>
      */
-    private function updateTranslationContent(array $content, TranslationKey $key, ?string $value) : array
+    private function updateTranslationContent(array $content, TranslationKey $key, ?string $value): array
     {
         $subKeys        = $key->getKeyAsArray();
         $newTranslation = $value;

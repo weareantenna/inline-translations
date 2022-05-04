@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations;
 
-use Antenna\InlineTranslations\Console\GenerateCsvCommand;
 use Antenna\InlineTranslations\Console\ImportCommand;
 use Antenna\InlineTranslations\Middleware\AssetInjectionMiddleware;
 use Antenna\InlineTranslations\Plugins\Laravel\LaravelTranslatorInterceptor;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
-use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Symfony\Component\Finder\Finder;
+
 use function resource_path;
 
 final class InlineTranslationsServiceProvider extends ServiceProvider
 {
-    public function boot() : void
+    public function boot(): void
     {
         $filesystem = $this->getFilesystem();
-        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem) : TranslationFetcher {
-            return new TranslationFetcher($filesystem);
+        $basePath   = $this->getBasePath();
+        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem, $basePath): TranslationFetcher {
+            return new TranslationFetcher($filesystem, $basePath);
         });
-        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem) : TranslationUpdater {
-            return new TranslationUpdater($filesystem);
+        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem, $basePath): TranslationUpdater {
+            return new TranslationUpdater($filesystem, $basePath);
         });
 
         $this->app->singleton(ImportCommand::class, static function ($app) {
@@ -61,6 +62,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             return;
         }
 
+        /** @phpstan-ignore-next-line */
         if (! $this->app->environment($this->app['config']['inline-translations.translation_environments'])) {
             return;
         }
@@ -68,7 +70,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         $this->registerMiddleware(AssetInjectionMiddleware::class);
     }
 
-    public function register() : void
+    public function register(): void
     {
         if (! $this->allowedEnvironment()) {
             return;
@@ -83,7 +85,8 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         ], 'inline-translations-views');
 
         $translationModeActive = $this->isTranslationModeActive();
-        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive) : void {
+        /** @phpstan-ignore-next-line */
+        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive): void {
             $view->with([
                 'enabled' => (int) $translationModeActive,
             ]);
@@ -93,7 +96,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->app->extend('translator', static function ($translator, $app) : LaravelTranslatorInterceptor {
+        $this->app->extend('translator', static function ($translator, $app): LaravelTranslatorInterceptor {
             $trans = new LaravelTranslatorInterceptor($translator->getLoader(), $app['config']['app.locale']);
             $trans->setFallback($app['config']['app.fallback_locale']);
 
@@ -101,26 +104,34 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         });
     }
 
-    private function isTranslationModeActive() : bool
+    private function isTranslationModeActive(): bool
     {
+        /** @phpstan-ignore-next-line */
         return (bool) $this->app['request']->cookie('inline-translations-active') === true;
     }
 
-    private function allowedEnvironment() : bool
+    private function allowedEnvironment(): bool
     {
+        /** @phpstan-ignore-next-line */
         return (bool) $this->app->environment($this->app['config']['inline-translations.translation_environments']);
     }
 
-    protected function getFilesystem() : Filesystem
+    protected function getFilesystem(): Filesystem
     {
-        $languagePath = $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
-        $adapter      = new Local($languagePath);
+        $adapter = new LocalFilesystemAdapter($this->getBasePath());
 
         return new Filesystem($adapter);
     }
 
-    protected function registerMiddleware(string $middleware) : void
+    protected function getBasePath(): string
     {
+        /** @phpstan-ignore-next-line */
+        return $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
+    }
+
+    protected function registerMiddleware(string $middleware): void
+    {
+        /** @phpstan-ignore-next-line */
         $kernel = $this->app[Kernel::class];
         $kernel->pushMiddleware($middleware);
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations\Models;
 
 use Antenna\InlineTranslations\Exceptions\InvalidKeyException;
+
 use function array_shift;
 use function count;
 use function explode;
@@ -21,7 +22,7 @@ class TranslationKey
         $this->setKey($key);
     }
 
-    public static function fromString(string $fullKey) : self
+    public static function fromString(string $fullKey): self
     {
         $split   = explode('::', $fullKey);
         $package = count($split) > 1 ? array_shift($split) : null;
@@ -34,7 +35,7 @@ class TranslationKey
         return new self($key, $package);
     }
 
-    private function setKey(string $key) : void
+    private function setKey(string $key): void
     {
         if (strpos($key, '.') === false) {
             throw InvalidKeyException::providedKeyForPackageInvalid($key, $this->package);
@@ -43,12 +44,12 @@ class TranslationKey
         $this->key = $key;
     }
 
-    public function getKey() : string
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    public function getTranslationFileForLanguage(string $language) : string
+    public function getTranslationFileForLanguage(string $language): string
     {
         $path = '';
         if ($this->package) {
@@ -61,7 +62,7 @@ class TranslationKey
     }
 
     /** @return array<string> */
-    public function getKeyAsArray() : array
+    public function getKeyAsArray(): array
     {
         $keyArray = explode('.', $this->key);
         array_shift($keyArray);

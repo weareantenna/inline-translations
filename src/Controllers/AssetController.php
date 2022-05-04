@@ -7,17 +7,18 @@ namespace Antenna\InlineTranslations\Controllers;
 use DateTime;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
+
 use function file_get_contents;
 
 class AssetController extends BaseController
 {
     /** @return string[] */
-    private function getStylesheets() : array
+    private function getStylesheets(): array
     {
         return [];
     }
 
-    private function getJavascript(string $file) : string
+    private function getJavascript(string $file): string
     {
         return [
             'main.js' => 'dist/main.bundle.js',
@@ -25,7 +26,7 @@ class AssetController extends BaseController
         ][$file];
     }
 
-    public function js(string $file) : Response
+    public function js(string $file): Response
     {
         $response = new Response(
             $this->dumpAssetsToString([$this->getJavascript($file)]),
@@ -36,7 +37,7 @@ class AssetController extends BaseController
         return $this->cacheResponse($response);
     }
 
-    public function css() : Response
+    public function css(): Response
     {
         $response = new Response(
             $this->dumpAssetsToString($this->getStylesheets()),
@@ -47,7 +48,7 @@ class AssetController extends BaseController
         return $this->cacheResponse($response);
     }
 
-    protected function cacheResponse(Response $response) : Response
+    protected function cacheResponse(Response $response): Response
     {
         $response->setMaxAge(31536000);
         $response->setExpires(new DateTime('+1 year'));
@@ -56,7 +57,7 @@ class AssetController extends BaseController
     }
 
     /** @param string[] $assets */
-    private function dumpAssetsToString(array $assets) : string
+    private function dumpAssetsToString(array $assets): string
     {
         $assetString = '';
         foreach ($assets as $asset) {
