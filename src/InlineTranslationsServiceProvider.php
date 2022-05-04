@@ -126,7 +126,7 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
     protected function getBasePath(): string
     {
         /** @phpstan-ignore-next-line */
-        return $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'];
+        return $this->app->basePath() . '/' . $this->app['config']['inline-translations.translation_folder'] . '/';
     }
 
     protected function registerMiddleware(string $middleware): void
