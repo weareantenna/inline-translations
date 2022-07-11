@@ -55,7 +55,7 @@ class ListController
         }, 'translations.csv');
     }
 
-    public function import(Request $request, TranslationUpdater $updater): JsonResponse
+    public function import(TranslationUpdater $updater, Request $request): JsonResponse
     {
         $csv = $request->file('translations');
         assert($csv instanceof UploadedFile);

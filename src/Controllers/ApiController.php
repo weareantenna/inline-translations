@@ -16,7 +16,7 @@ use function opcache_reset;
 
 class ApiController extends BaseController
 {
-    public function fetch(?string $language = null, TranslationFetcher $fetcher): JsonResponse
+    public function fetch(TranslationFetcher $fetcher, ?string $language = null): JsonResponse
     {
         if ($language === null) {
             $translations = $fetcher->fetchAllGroupedByKeys();
