@@ -68,6 +68,14 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         }
 
         $this->registerMiddleware(AssetInjectionMiddleware::class);
+
+        $translationModeActive = $this->isTranslationModeActive();
+        /** @phpstan-ignore-next-line */
+        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive): void {
+            $view->with([
+                'enabled' => (int) $translationModeActive,
+            ]);
+        });
     }
 
     public function register(): void
@@ -85,12 +93,6 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
         ], 'inline-translations-views');
 
         $translationModeActive = $this->isTranslationModeActive();
-        /** @phpstan-ignore-next-line */
-        $this->app['view']->composer('inlineTranslations::index', static function (View $view) use ($translationModeActive): void {
-            $view->with([
-                'enabled' => (int) $translationModeActive,
-            ]);
-        });
 
         if (! $translationModeActive) {
             return;
