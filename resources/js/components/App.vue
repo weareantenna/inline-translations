@@ -97,6 +97,7 @@
             this.observeDomForNewTranslations();
             this.fetchAllTranslations();
             this.addInlineClickEventListener();
+            document.body.classList.add('inline-translations-active');
         },
         computed: {
             basePath() {
@@ -184,6 +185,7 @@
                     for (let target = e.target; target && target != this && target !== document; target = target.parentNode) {
                         if (target.matches('.trans-ui-element i')) {
                             e.preventDefault();
+                            e.stopPropagation();
                             let key = target.parentElement.getAttribute('data-translation-key');
                             this.activeTranslation = this.pageTranslations.find(
                                 trans => trans.key === key
