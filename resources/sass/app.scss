@@ -5,6 +5,8 @@
 
   .sortable {
     cursor: pointer;
+    display: flex;
+    align-items: center;
 
     span {
       padding-right: 10px;
@@ -24,21 +26,50 @@
     overflow-x: hidden;
   }
 
+  .translator-wrapper.swapped {
+    right: auto;
+    left: 0;
+    flex-direction: row-reverse;
+
+    &.animate {
+      right: auto;
+      left: -300px;
+    }
+  }
+
+
+
   .animate{
     right: -300px;
     position: fixed;
   }
 
-  .show-hide-btn {
+  .togglers {
     width: 50px;
-    height: 50px;
-    z-index: 1;
+    height: 80px;
     padding: 10px;
+    z-index: 1;
     background-color: $primary;
+  }
+
+  .show-hide-btn {
+    height: 40px;
 
     svg {
       width: 30px;
       height: 30px;
+    }
+  }
+
+  .swap-button {
+    background-color: $primary;
+    border-top: 1px solid black;
+    height: 30px;
+    padding: 5px;
+
+    svg {
+      margin-left: 2;
+      height: 15px;
     }
   }
 

@@ -1,11 +1,21 @@
 <template>
-    <div class="translator-wrapper" :style="{ 'width': (config.widget_width || 350) + 'px' }">
-        <div class="show-hide-btn" @click="toggleShow">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="29.981" viewBox="0 0 30 29.981">
-                <g id="Group_2701" data-name="Group 2701" transform="translate(-1 -1.045)">
-                    <path id="Path_43739" data-name="Path 43739" d="M31,12A11,11,0,0,0,9.43,9H4a3,3,0,0,0-3,3V24a3,3,0,0,0,2.72,3L3,29.76a1,1,0,0,0,1.5,1.11L11.27,27H21a3,3,0,0,0,3-3V22.24A11,11,0,0,0,31,12ZM21,20.67V18h1.92A5.816,5.816,0,0,1,21,20.67ZM15.83,20a9.056,9.056,0,0,1-2.51-2H15A12.047,12.047,0,0,0,15.83,20ZM12,8h2.4a19.186,19.186,0,0,0-.4,3H11A8.877,8.877,0,0,1,12,8Zm17,3H26a19.051,19.051,0,0,0-.38-3H28a8.873,8.873,0,0,1,.93,3Zm-5,0H21V8h2.56A16.976,16.976,0,0,1,24,11Zm-5,0H16a16.958,16.958,0,0,1,.42-3H19Zm0,2v3H16.44A16.976,16.976,0,0,1,16,13Zm-5,0a19.051,19.051,0,0,0,.38,3H12a8.886,8.886,0,0,1-.89-3Zm5,5v2.67A5.816,5.816,0,0,1,17.08,18Zm2-2V13h3a16.958,16.958,0,0,1-.42,3Zm5-3h3a8.877,8.877,0,0,1-1,3H25.6A19.186,19.186,0,0,0,26,13Zm.7-7H25a12.072,12.072,0,0,0-.88-2,9.057,9.057,0,0,1,2.55,2ZM22.92,6H21V3.33A5.816,5.816,0,0,1,22.92,6ZM19,3.33V6H17.08A5.816,5.816,0,0,1,19,3.33ZM15.83,4A12.047,12.047,0,0,0,15,6H13.33A9.063,9.063,0,0,1,15.83,4ZM22,24a1,1,0,0,1-1,1H11a1.006,1.006,0,0,0-.5.13L5.54,28,6,26.24a1,1,0,0,0-.73-1.211A.981.981,0,0,0,5,25H4a1,1,0,0,1-1-1V12a1,1,0,0,1,1-1H9.05c0,.33-.05.66-.05,1A11,11,0,0,0,22,22.81Zm2.17-4A12.047,12.047,0,0,0,25,18h1.63A9.065,9.065,0,0,1,24.17,20Z" fill="#212529"/>
-                </g>
-            </svg>
+    <div class="translator-wrapper" :style="{ 'width': (config.widget_width || 350) + 'px' }" :class="{swapped: swapped}">
+        <div class="togglers">
+            <div  @click="toggleShow" class="show-hide-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="29.981" viewBox="0 0 30 29.981">
+                  <g id="Group_2701" data-name="Group 2701" transform="translate(-1 -1.045)">
+                      <path id="Path_43739" data-name="Path 43739" d="M31,12A11,11,0,0,0,9.43,9H4a3,3,0,0,0-3,3V24a3,3,0,0,0,2.72,3L3,29.76a1,1,0,0,0,1.5,1.11L11.27,27H21a3,3,0,0,0,3-3V22.24A11,11,0,0,0,31,12ZM21,20.67V18h1.92A5.816,5.816,0,0,1,21,20.67ZM15.83,20a9.056,9.056,0,0,1-2.51-2H15A12.047,12.047,0,0,0,15.83,20ZM12,8h2.4a19.186,19.186,0,0,0-.4,3H11A8.877,8.877,0,0,1,12,8Zm17,3H26a19.051,19.051,0,0,0-.38-3H28a8.873,8.873,0,0,1,.93,3Zm-5,0H21V8h2.56A16.976,16.976,0,0,1,24,11Zm-5,0H16a16.958,16.958,0,0,1,.42-3H19Zm0,2v3H16.44A16.976,16.976,0,0,1,16,13Zm-5,0a19.051,19.051,0,0,0,.38,3H12a8.886,8.886,0,0,1-.89-3Zm5,5v2.67A5.816,5.816,0,0,1,17.08,18Zm2-2V13h3a16.958,16.958,0,0,1-.42,3Zm5-3h3a8.877,8.877,0,0,1-1,3H25.6A19.186,19.186,0,0,0,26,13Zm.7-7H25a12.072,12.072,0,0,0-.88-2,9.057,9.057,0,0,1,2.55,2ZM22.92,6H21V3.33A5.816,5.816,0,0,1,22.92,6ZM19,3.33V6H17.08A5.816,5.816,0,0,1,19,3.33ZM15.83,4A12.047,12.047,0,0,0,15,6H13.33A9.063,9.063,0,0,1,15.83,4ZM22,24a1,1,0,0,1-1,1H11a1.006,1.006,0,0,0-.5.13L5.54,28,6,26.24a1,1,0,0,0-.73-1.211A.981.981,0,0,0,5,25H4a1,1,0,0,1-1-1V12a1,1,0,0,1,1-1H9.05c0,.33-.05.66-.05,1A11,11,0,0,0,22,22.81Zm2.17-4A12.047,12.047,0,0,0,25,18h1.63A9.065,9.065,0,0,1,24.17,20Z" fill="#212529"/>
+                  </g>
+              </svg>
+            </div>
+            <div @click="swapLocation" class="swap-button">
+                <svg v-if="!swapped" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+            </div>
         </div>
         <div class="translator-ui">
             <div class="trans-ui-row">
@@ -90,10 +100,12 @@
             observerConfig: {childList: true, subtree: true},
             show: true,
             submittedSuccessfully: false,
-            sorting: false
+            sorting: false,
+            swapped: false,
         }),
         mounted() {
             this.config = JSON.parse(document.getElementById('antenna-inline-translator').getAttribute('data-config'));
+            this.swapped = window.localStorage.getItem('swapped-inline') === 'true';
             this.observeDomForNewTranslations();
             this.fetchAllTranslations();
             this.addInlineClickEventListener();
@@ -149,6 +161,10 @@
             }
         },
         methods: {
+            swapLocation() {
+                this.swapped = !this.swapped;
+                window.localStorage.setItem('swapped-inline', this.swapped);
+            },
             observeDomForNewTranslations() {
                 const observer = new MutationObserver((mutationsList, observer) => {
                     observer.disconnect();
