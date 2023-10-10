@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations\Test;
 
-use Antenna\InlineTranslations\TranslationFetcher;
+use Antenna\InlineTranslations\FileTranslationFetcher;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
 
 class TranslationFetcherTest extends TestCase
 {
-    private TranslationFetcher $fetcher;
+    private FileTranslationFetcher $fetcher;
 
     public function setUp(): void
     {
         $adapter       = new LocalFilesystemAdapter(__DIR__ . '/translations');
         $filesystem    = new Filesystem($adapter);
-        $this->fetcher = new TranslationFetcher($filesystem, __DIR__ . '/translations/');
+        $this->fetcher = new FileTranslationFetcher($filesystem, __DIR__ . '/translations/');
     }
 
     public function testReadAllTranslationsPerLanguage(): void

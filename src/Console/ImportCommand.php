@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Antenna\InlineTranslations\Console;
 
-use Antenna\InlineTranslations\TranslationFetcher;
-use Antenna\InlineTranslations\TranslationUpdater;
+use Antenna\InlineTranslations\FileTranslationFetcher;
+use Antenna\InlineTranslations\FileTranslationUpdater;
 use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
 
@@ -27,7 +27,7 @@ class ImportCommand extends Command
     /** @var string[] */
     private array $translationFunctions;
 
-    private TranslationUpdater $translationUpdater;
+    private FileTranslationUpdater $translationUpdater;
 
     /** @var string[] */
     private array $existingKeys;

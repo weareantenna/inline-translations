@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Antenna\InlineTranslations\Test;
 
 use Antenna\InlineTranslations\Exceptions\InvalidKeyException;
-use Antenna\InlineTranslations\TranslationUpdater;
+use Antenna\InlineTranslations\FileTranslationUpdater;
 use League\Flysystem\Filesystem;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\TestCase;
 
 class TranslationUpdaterTest extends TestCase
 {
-    private TranslationUpdater $updater;
+    private FileTranslationUpdater $updater;
 
     public function setUp(): void
     {
         $adapter = new InMemoryFilesystemAdapter();
 
         $filesystem    = new Filesystem($adapter);
-        $this->updater = new TranslationUpdater($filesystem, 'tests/translations');
+        $this->updater = new FileTranslationUpdater($filesystem, 'tests/translations');
     }
 
     public function testInvalidKey(): void

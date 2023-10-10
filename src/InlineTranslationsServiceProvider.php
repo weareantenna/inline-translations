@@ -22,11 +22,11 @@ final class InlineTranslationsServiceProvider extends ServiceProvider
     {
         $filesystem = $this->getFilesystem();
         $basePath   = $this->getBasePath();
-        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem, $basePath): TranslationFetcher {
-            return new TranslationFetcher($filesystem, $basePath);
+        $this->app->bind(TranslationFetcher::class, static function () use ($filesystem, $basePath): FileTranslationFetcher {
+            return new FileTranslationFetcher($filesystem, $basePath);
         });
-        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem, $basePath): TranslationUpdater {
-            return new TranslationUpdater($filesystem, $basePath);
+        $this->app->bind(TranslationUpdater::class, static function () use ($filesystem, $basePath): FileTranslationUpdater {
+            return new FileTranslationUpdater($filesystem, $basePath);
         });
 
         $this->app->singleton(ImportCommand::class, static function ($app) {
