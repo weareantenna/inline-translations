@@ -36,6 +36,7 @@ class DbTranslationFetcher implements TranslationFetcher
                 }
 
                 $result[$translation->key][$languageLine->language] = $languageLine->translation;
+                $result[$translation->key]['extra'] = $translation->getAttributes();
             }
         }
 

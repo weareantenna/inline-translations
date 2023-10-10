@@ -58,5 +58,10 @@ return [
         '$trans.get',
         '$t',
         '__t'
+    ],
+
+    'handling' => [
+        'fetcher' => \Antenna\InlineTranslations\FileTranslationFetcher::class,
+        'updater' => \Antenna\InlineTranslations\FileTranslationFetcher::class,
     ]
 ];
